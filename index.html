@@ -1,61 +1,387 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alhijrah Services - Landing Page</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>نظام خدمات الهجرة والوكالات - متكامل</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+  body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0; padding: 0;
+    background: linear-gradient(135deg, #0b1e4d, #04294a);
+    color: #f5deb3;
+    min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 40px 20px;
+  }
+  .container {
+    background: rgba(3, 23, 58, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 0 20px #daa520cc;
+    max-width: 700px;
+    width: 100%;
+    padding: 30px 40px;
+    box-sizing: border-box;
+  }
+  h1 {
+    text-align: center;
+    color: #daa520;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 2.4rem;
+    text-shadow: 0 0 8px #ffd700;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  select, input, textarea {
+    font-family: 'Cairo', sans-serif;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.1rem;
+    background: #0b1e4d;
+    color: #f5deb3;
+    box-shadow: inset 0 0 8px #daa520cc;
+    margin-bottom: 20px;
+    outline-offset: 2px;
+    outline-color: #daa520;
+    box-sizing: border-box;
+  }
+  select:focus, input:focus, textarea:focus {
+    box-shadow: 0 0 12px #ffd700;
+  }
+  button {
+    background: #daa520;
+    border: none;
+    padding: 14px 0;
+    border-radius: 12px;
+    color: #041c3f;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  button:hover, button:focus {
+    background: #ffd700;
+    outline: none;
+    box-shadow: 0 0 10px #ffd700aa;
+  }
+  .services-list {
+    background: #041c3f;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: inset 0 0 12px #daa520cc;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 25px;
+  }
+  .services-list h2 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  .services-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .services-list ul li {
+    background: #0c2a6b;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: default;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+  }
+  .services-list ul li:hover {
+    background: #daa520;
+    color: #041c3f;
+    box-shadow: 0 0 12px #ffd700;
+  }
+  /* Scrollbar */
+  .services-list::-webkit-scrollbar {
+    width: 8px;
+  }
+  .services-list::-webkit-scrollbar-track {
+    background: #041c3f;
+    border-radius: 10px;
+  }
+  .services-list::-webkit-scrollbar-thumb {
+    background: #daa520;
+    border-radius: 10px;
+  }
+  /* Form Section */
+  #applicationForm {
+    background: #041c3f;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: inset 0 0 15px #daa520cc;
+    display: none;
+  }
+  #reviewSection {
+    background: #022039;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+    display: none;
+    color: #ffd700;
+  }
+  #reviewSection h3 {
+    margin-top: 0;
+    font-weight: 700;
+  }
+  /* Accessibility */
+  select:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 3px solid #ffd700;
+  }
+  /* Responsive */
+  @media(max-width: 700px) {
+    .container {
+      padding: 25px 20px;
+    }
+  }
+</style>
 </head>
 <body>
-<canvas id="bgCanvas"></canvas>
-<header><img src="ALHIJRAH LOGO.jpg" alt="Alhijrah Logo" class="logo"></header>
-<section class="hero">
-  <h1>تحويل الرحلات إلى بدايات جديدة</h1>
-  <p>خدمات الهجرة والتأشيرات والسفريات</p>
-  <button onclick="scrollToForm()">ابدأ رحلتك الآن</button>
-</section>
-<section id="formSection" class="future-form">
-  <h3>النموذج الموحد لتقديم الطلبات</h3>
-  <label>اختر الدولة</label>
-  <select id="countrySelect" onchange="populateMainServices()"><option value="">-- اختر الدولة --</option></select>
-  <label>الخدمة الرئيسية</label>
-  <select id="mainServiceSelect" onchange="populateSubServices()"><option value="">-- اختر الخدمة الرئيسية --</option></select>
-  <label>الخدمة الفرعية</label>
-  <select id="subServiceSelect" onchange="showServiceDetails()"><option value="">-- اختر الخدمة الفرعية --</option></select>
-  <div id="serviceDetails" class="details-box"></div>
-  <input type="text" id="clientName" placeholder="الاسم الكامل" required>
-  <input type="email" id="clientEmail" placeholder="البريد الإلكتروني" required>
-  <input type="tel" id="clientPhone" placeholder="رقم الهاتف" required>
-  <button onclick="submitForm()">إرسال الطلب</button>
-</section>
-<div id="clientCard" class="client-card">
-  <h3>بطاقة الطلب</h3>
-  <p id="cardCase"></p><p id="cardName"></p><p id="cardPhone"></p><p id="cardEmail"></p>
-  <p id="cardCountry"></p><p id="cardService"></p><p id="cardDate"></p>
-  <img id="qrCode" src="" alt="QR Code">
-  <div class="card-buttons">
-    <button onclick="sendWhatsApp()">إرسال عبر واتساب</button>
-    <button onclick="downloadPDF()">تحميل PDF</button>
+  <div class="container" role="main" aria-label="نظام اختيار خدمات الهجرة">
+    <h1>نظام خدمات الهجرة والوكالات</h1>
+    
+    <label for="countrySelect">اختر الدولة أو الخدمة:</label>
+    <select id="countrySelect" aria-describedby="countryHelp" aria-required="true" required>
+      <option value="" disabled selected>-- اختر الدولة أو الخدمة --</option>
+      <option value="usa">خدمات الهجرة إلى أمريكا</option>
+      <option value="canada">خدمات الهجرة إلى كندا</option>
+      <option value="newzealand">خدمات الهجرة إلى نيوزيلندا</option>
+      <option value="australia">خدمات الهجرة إلى أستراليا</option>
+      <option value="yemen">خدمات الهجرة والجوازات اليمنية</option>
+      <option value="translation">خدمات الترجمة</option>
+      <option value="notarization">خدمات التوثيق</option>
+      <option value="powerofattorney">خدمات التوكيل والتعميد</option>
+      <option value="hajj">خدمات الحج والعمرة</option>
+      <option value="flights">خدمات حجوزات الطيران</option>
+    </select>
+
+    <div class="services-list" id="servicesContainer" aria-live="polite" aria-atomic="true" tabindex="0" hidden>
+      <h2>الخدمات المتاحة</h2>
+      <ul id="servicesList"></ul>
+    </div>
+
+    <form id="applicationForm" aria-label="نموذج تقديم الطلب" novalidate>
+      <h2>نموذج تقديم الطلب</h2>
+      
+      <label for="selectedService">الخدمة المختارة:</label>
+      <input type="text" id="selectedService" name="selectedService" readonly aria-readonly="true" />
+
+      <label for="fullName">الاسم الكامل:</label>
+      <input type="text" id="fullName" name="fullName" placeholder="أدخل اسمك الكامل" required />
+
+      <label for="email">البريد الإلكتروني:</label>
+      <input type="email" id="email" name="email" placeholder="example@mail.com" required />
+
+      <label for="phone">رقم الهاتف:</label>
+      <input type="tel" id="phone" name="phone" placeholder="مثلاً: 00966555555555" required pattern="^\+?\d{8,15}$" />
+
+      <label for="additionalDetails">تفاصيل إضافية (اختياري):</label>
+      <textarea id="additionalDetails" name="additionalDetails" rows="4" placeholder="اكتب أي معلومات إضافية"></textarea>
+
+      <label for="fileUpload">إرفاق مستندات (اختياري):</label>
+      <input type="file" id="fileUpload" name="fileUpload" accept=".pdf,.doc,.docx,.jpg,.png" multiple aria-describedby="fileHelp" />
+
+      <button type="button" id="reviewBtn">مراجعة الطلب</button>
+    </form>
+
+    <section id="reviewSection" tabindex="0" aria-live="polite" aria-atomic="true">
+      <h3>مراجعة بيانات الطلب</h3>
+      <div id="reviewContent"></div>
+      <button type="button" id="editBtn" aria-label="تعديل البيانات">تعديل البيانات</button>
+      <button type="submit" id="submitBtn" aria-label="إرسال الطلب">إرسال الطلب</button>
+    </section>
+
   </div>
-</div>
-<div id="thankYouPopup" class="popup">
-  <div class="popup-content">
-    <h3>شكراً لتواصلك معنا!</h3>
-    <p>تم استلام طلبك بنجاح وسنقوم بالتواصل معك قريباً.</p>
-    <button onclick="closePopup()">إغلاق</button>
-  </div>
-</div>
-<section class="about"><h2>من نحن</h2><p>نحن في Alhijrah Services نقدم أفضل الحلول للهجرة والتأشيرات والسفريات بخبرة عالية واحترافية.</p></section>
-<section class="contact"><h2>تواصل معنا</h2>
-  <p>واتساب: <a href="https://wa.me/13139194272" target="_blank">+1 313-919-4272</a></p>
-  <p>البريد: <a href="mailto:Visa@alhijrahservices.com">Visa@alhijrahservices.com</a></p>
-  <p>الموقع: <a href="https://alhijrahvisa.com" target="_blank">Alhijrahvisa.com</a></p>
-</section>
-<footer><p>© 2025 Alhijrah Services - جميع الحقوق محفوظة</p></footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="script.js"></script>
+
+<script>
+  const servicesData = {
+    usa: [
+      "الهجرة العائلية",
+      "الهجرة المهنية",
+      "التأشيرات السياحية",
+      "التأشيرات الدراسية",
+      "اللجوء والحماية"
+    ],
+    canada: [
+      "برنامج العمال المهرة",
+      "الهجرة العائلية",
+      "برامج الترشيح الإقليمية",
+      "تجديد التأشيرة",
+      "برنامج الطلاب الدوليين"
+    ],
+    newzealand: [
+      "برامج العمالة المهرة",
+      "التأشيرات العائلية",
+      "التأشيرات السياحية",
+      "التأشيرات الدراسية",
+      "برامج الاستثمار"
+    ],
+    australia: [
+      "برامج الهجرة المهارية",
+      "التأشيرات العائلية",
+      "التأشيرات السياحية",
+      "برامج العمل المؤقت",
+      "برامج اللجوء"
+    ],
+    yemen: [
+      "إصدار جوازات السفر",
+      "تجديد الجوازات",
+      "خدمات الهجرة الداخلية",
+      "خدمات الإقامات",
+      "تسجيل الولادات والوفيات"
+    ],
+    translation: [
+      "ترجمة المستندات الرسمية",
+      "الترجمة القانونية",
+      "ترجمة الشهادات",
+      "الترجمة المعتمدة",
+      "الترجمة الفورية"
+    ],
+    notarization: [
+      "توثيق العقود",
+      "توكيد صحة المستندات",
+      "تسجيل الوكالات",
+      "التصديق على التوقيعات",
+      "توثيق المعاملات القانونية"
+    ],
+    powerofattorney: [
+      "صياغة التوكيلات",
+      "التوكيلات العامة",
+      "التوكيلات الخاصة",
+      "التعميد القانوني",
+      "تسجيل التوكيلات"
+    ],
+    hajj: [
+      "حجز رحلات الحج",
+      "حجوزات العمرة",
+      "تنظيم الجولات الدينية",
+      "خدمات الإقامة",
+      "خدمات النقل"
+    ],
+    flights: [
+      "حجز تذاكر الطيران المحلية",
+      "حجز تذاكر الطيران الدولية",
+      "خدمات التذاكر العائلية",
+      "حجز رحلات الطيران العارض",
+      "خدمات تعديل التذاكر"
+    ]
+  };
+
+  const countrySelect = document.getElementById('countrySelect');
+  const servicesContainer = document.getElementById('servicesContainer');
+  const servicesList = document.getElementById('servicesList');
+  const applicationForm = document.getElementById('applicationForm');
+  const selectedServiceInput = document.getElementById('selectedService');
+  const reviewSection = document.getElementById('reviewSection');
+  const reviewContent = document.getElementById('reviewContent');
+  const reviewBtn = document.getElementById('reviewBtn');
+  const editBtn = document.getElementById('editBtn');
+  const submitBtn = document.getElementById('submitBtn');
+
+  let currentSelectedService = "";
+
+  // عرض الخدمات عند اختيار الدولة/الخدمة
+  countrySelect.addEventListener('change', () => {
+    const selectedCountry = countrySelect.value;
+    servicesList.innerHTML = "";
+    applicationForm.style.display = 'none';
+    reviewSection.style.display = 'none';
+
+    if (servicesData[selectedCountry]) {
+      servicesContainer.hidden = false;
+      servicesList.innerHTML = "";
+      servicesData[selectedCountry].forEach(service => {
+        const li = document.createElement('li');
+        li.textContent = service;
+        li.tabIndex = 0;
+        li.setAttribute('role', 'button');
+        li.setAttribute('aria-pressed', 'false');
+        li.addEventListener('click', () => selectService(service));
+        li.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectService(service);
+          }
+        });
+        servicesList.appendChild(li);
+      });
+    } else {
+      servicesContainer.hidden = true;
+    }
+  });
+
+  // عند اختيار خدمة من القائمة
+  function selectService(serviceName) {
+    currentSelectedService = serviceName;
+    selectedServiceInput.value = serviceName;
+    applicationForm.style.display = 'block';
+    reviewSection.style.display = 'none';
+    applicationForm.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // مراجعة الطلب
+  reviewBtn.addEventListener('click', () => {
+    if (!applicationForm.checkValidity()) {
+      applicationForm.reportValidity();
+      return;
+    }
+    const formData = new FormData(applicationForm);
+    let reviewHTML = `<p><strong>الخدمة المختارة:</strong> ${formData.get('selectedService')}</p>`;
+    reviewHTML += `<p><strong>الاسم الكامل:</strong> ${formData.get('fullName')}</p>`;
+    reviewHTML += `<p><strong>البريد الإلكتروني:</strong> ${formData.get('email')}</p>`;
+    reviewHTML += `<p><strong>رقم الهاتف:</strong> ${formData.get('phone')}</p>`;
+    const details = formData.get('additionalDetails');
+    reviewHTML += `<p><strong>تفاصيل إضافية:</strong> ${details ? details.replace(/\n/g, '<br>') : 'لا يوجد'}</p>`;
+
+    const files = applicationForm.querySelector('#fileUpload').files;
+    if (files.length > 0) {
+      reviewHTML += `<p><strong>المستندات المرفقة:</strong><ul>`;
+      for (let i=0; i<files.length; i++) {
+        reviewHTML += `<li>${files[i].name}</li>`;
+      }
+      reviewHTML += `</ul></p>`;
+    } else {
+      reviewHTML += `<p><strong>المستندات المرفقة:</strong> لا يوجد</p>`;
+    }
+
+    reviewContent.innerHTML = reviewHTML;
+    applicationForm.style.display = 'none';
+    reviewSection.style.display = 'block';
+    reviewSection.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // تعديل البيانات
+  editBtn.addEventListener('click', () => {
+    reviewSection.style.display = 'none';
+    applicationForm.style.display = 'block';
+    applicationForm.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // إرسال الطلب (هنا فقط محاكاة، يمكن ربطه بخادم أو API)
+  submitBtn.addEventListener('click', () => {
+    alert('تم إرسال طلبك بنجاح!\nسنقوم بالتواصل معك في أقرب وقت.');
+    applicationForm.reset();
+    reviewSection.style.display = 'none';
+    applicationForm.style.display = 'none';
+    servicesContainer.hidden = true;
+    countrySelect.value = "";
+    selectedServiceInput.value = "";
+    currentSelectedService = "";
+  });
+</script>
 </body>
 </html>
