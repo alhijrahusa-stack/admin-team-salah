@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مرحبًا بكم في Career Gate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at top left, #0d1c2f, #010f1a);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+    header h1 {
+      font-size: 3rem;
+      background: linear-gradient(90deg, #ffaa00, #ffdd55);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #ffaa00; }
+      to { text-shadow: 0 0 20px #ffaa00; }
+    }
+    .intro {
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.3rem;
+      line-height: 2;
+      color: #e0e0e0;
+    }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #ffaa00, #ffcc33);
+      color: #121212;
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-size: 1.2rem;
+      text-decoration: none;
+      box-shadow: 0 0 15px #ffaa00a2;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #ffcc33, #ffaa00);
+      box-shadow: 0 0 25px #ffaa00cc;
+      transform: scale(1.05);
+    }
+    .btn i {
+      font-size: 1.3rem;
+    }
+    .icons-floating {
+      position: fixed;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 999;
+    }
+    .icons-floating a {
+      background: rgba(255, 165, 0, 0.1);
+      color: #ffaa00;
+      padding: 14px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      box-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
+      transition: 0.3s;
+    }
+    .icons-floating a:hover {
+      background: rgba(255, 165, 0, 0.2);
+      box-shadow: 0 0 25px #ffaa00;
+    }
+  </style>
+</head>
+<body>
+  <div class="icons-floating">
+    <a href="https://wa.me/13139194292" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="mailto:Jobs@alhijrahservices.com" title="Email"><i class="fas fa-envelope"></i></a>
+    <a href="#" title="Chat"><i class="fas fa-comments"></i></a>
+  </div>  <header>
+    <h1>بوابة التوظيف الذكية – مكتب الهجرة</h1>
+  </header>  <section class="intro">
+    <p>
+      مرحبًا بكم في منصتكم الذكية <strong style="color:#ffaa00">Career Gate</strong>،<br>
+      حيث نُقدّم تجربة توظيف مبتكرة تعتمد على الذكاء الاصطناعي والتقنيات التفاعلية الحديثة.<br>
+      نربطك بأفضل الفرص في كبرى الشركات مثل Amazon بطريقة ذكية، آمنة، وسلسة.
+    </p><div class="button-group">
+  <a href="https://form.jotform.com/AlhijrahServices/CareerGate" target="_blank" class="btn"><i class="fas fa-edit"></i> قدم طلبك الآن</a>
+  <a href="https://alhijrahvisa.com" target="_blank" class="btn"><i class="fas fa-globe"></i> الموقع الرسمي</a>
+</div>
+
+  </section>
+<script src='https://cdn.jotfor.ms/s/umd/latest/for-embedded-agent.js'></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function() {
+    window.AgentInitializer.init({
+      agentRenderURL: "https://agent.jotform.com/0195ab7c4d817624b1f675e053154b361025",
+      rootId: "JotformAgent-0195ab7c4d817624b1f675e053154b361025",
+      formID: "0195ab7c4d817624b1f675e053154b361025",
+      queryParams: ["skipWelcome=1", "maximizable=1"],
+      domain: "https://www.jotform.com",
+      isDraggable: false,
+      background: "linear-gradient(180deg, #6C73A8 0%, #6C73A8 100%)",
+      buttonBackgroundColor: "#0066C3",
+      buttonIconColor: "#FFFFFF",
+      variant: false,
+      customizations: {
+        "greeting": "Yes",
+        "greetingMessage": "مرحبًا! كيف يمكنني مساعدتك؟",
+        "openByDefault": "No",
+        "pulse": "Yes",
+        "position": "right",
+        "autoOpenChatIn": "0"
+      },
+      isVoice: undefined
+    });
+  });
+</script>
+</body>
+</html>
