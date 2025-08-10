@@ -25,17 +25,19 @@
     body{font-family:'Cairo',sans-serif;margin:0;background:linear-gradient(135deg,var(--blue),var(--blue2));color:var(--ink);padding-bottom:74px}
     a{color:inherit;text-decoration:none}
     .container{max-width:1100px;margin:auto;padding:28px}
-    .card{background:rgba(3,23,58,.95);border:1px solid var(--line);border-radius:16px;box-shadow:0 0 20px #daa52055;padding:22px}
+    .card{background:rgba(3,23,58,.95);border:1px solid var(--line);border-radius:16px;box-shadow:0 0 20px #daa52055;padding:22px;animation:fadeIn .4s ease}
     h1{margin:0 0 6px;color:var(--gold);text-shadow:0 0 8px var(--gold)}
     h2{margin:0 0 12px;color:var(--gold2)}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     .row{display:grid;gap:12px}
     .col-2{grid-template-columns:1fr 1fr}
     .col-3{grid-template-columns:repeat(3,1fr)}
     @media(max-width:840px){.col-2,.col-3{grid-template-columns:1fr}}
-    select,input,textarea{width:100%;background:#0b1e4d;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline-color:var(--gold)}
+    select,input,textarea{width:100%;background:#0b1e4d;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline-color:var(--gold);transition:box-shadow .2s}
     input:focus,select:focus,textarea:focus{box-shadow:0 0 12px #ffd700aa}
     label{display:block;margin:.35rem 0 .2rem;font-weight:700}
-    button{cursor:pointer;border:none;border-radius:12px;padding:12px 16px;font-weight:800}
+    button{cursor:pointer;border:none;border-radius:12px;padding:12px 16px;font-weight:800;transition:transform .08s}
+    button:active{transform:translateY(1px)}
     .btn{background:var(--gold);color:#04294a}
     .btn.sec{background:#0b1e4d;color:#fff;border:1px solid var(--line)}
     .toolbar{display:flex;gap:8px;flex-wrap:wrap}
@@ -102,9 +104,12 @@
 
     /* Photo capture */
     .photo-box{background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.25);border-radius:14px;padding:10px}
-    #cam{width:100%;border-radius:12px;display:none}
+    #cam{width:100%;border-radius:12px;display:none; transform: scaleX(-1);} /* mirror ONLY preview */
     #photoCanvas{width:100%;max-height:320px;border-radius:12px;display:none;background:#fff}
     .photo-hint{font-size:.95rem;color:#ffe59a}
+
+    /* Hide Jotform controls in UI (kept in code for future use) */
+    #btnJotPrefill, #btnJotTable, #btnJotBoard, #jotHint { display:none !important; }
   </style>
 </head>
 <body>
@@ -245,8 +250,8 @@
         <button id="submit" class="btn">تأكيد الإرسال</button>
       </div>
 
-      <!-- Jotform controls -->
-      <div class="toolbar" style="margin-top:10px; justify-content:flex-start">
+      <!-- Jotform controls (hidden via CSS) -->
+      <div class="toolbar" id="jotControls" style="margin-top:10px; justify-content:flex-start">
         <a id="btnJotPrefill" class="btn sec" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> <span id="bJotOpen">فتح نموذج Jotform (معبأ)</span></a>
         <a id="btnJotTable" class="btn sec" target="_blank" rel="noopener"><i class="fa-solid fa-table"></i> Jotform Table</a>
         <a id="btnJotBoard" class="btn sec" target="_blank" rel="noopener"><i class="fa-solid fa-grip"></i> Jotform Board</a>
@@ -273,6 +278,7 @@
 
         <div class="actions">
           <button id="dlPDF" class="btn"><i class="fa-solid fa-file-arrow-down"></i> <span id="bPDF">تنزيل PDF</span></button>
+          <button id="dlWord" class="btn sec"><i class="fa-solid fa-file-word"></i> <span id="bWord">تنزيل Word</span></button>
           <a id="waShare" class="btn sec" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> <span id="bWA">مشاركة واتساب</span></a>
           <button id="printCard" class="btn sec"><i class="fa-solid fa-print"></i> <span id="bPrint">طباعة</span></button>
         </div>
@@ -316,7 +322,7 @@
           <div class="footer-title" id="fBooking">حجوزات واستشارات</div>
           <div class="muted" id="fHours">استشارات يوميًا 10 ص – 6 م (EST)</div>
           <div class="footer-cta" style="margin-top:6px">
-            <a class="btn" href="https://wa.me/13139194272" target="_blank"><i class="fab fa-whatsapp"></i> <span id="fBook">احجز الآن</span></a>
+            <a class="btn" href="https://calendly.com/alhijrahservices-info/professional-consultation-alhijrah-immigration?month=2025-08" target="_blank" rel="noopener"><i class="fa-solid fa-calendar-days"></i> <span id="fBook">احجز الآن</span></a>
             <a class="btn sec" href="mailto:visa@alhijrahservices.com"><i class="fa-solid fa-envelope"></i> <span id="fEmailUs">راسلنا</span></a>
           </div>
         </div>
@@ -366,13 +372,12 @@ const INTEGRATIONS = {
     TO_EMAIL: "Jobs@alhijrahservices.com"
   },
   APPS_SCRIPT: {
-    ENDPOINT: "https://script.google.com/macros/s/AKfycbzotdf1wTf0n2xS1ua-4K8eksA1s-I9jBrk-ZRhODOqFByU5JZHsZnz5nveo3L4syxy-w/exec"
+    ENDPOINT: "https://script.google.com/macros/s/AKfycbzN07vwQbkeixwM4WGnfiODt6uzUQMFCJ-AyxtFZ2oGX0603YqiMw1xUlq-v5UG4xtf/exec"
   },
   JOTFORM: {
     FORM_URL: "https://form.jotform.com/AlhijrahServices/Alhijrahsmartportal",
     BOARD_URL: "https://www.jotform.com/boards/252149440362049",
     TABLE_URL: "https://www.jotform.com/tables/250817936172058",
-    // FIELD_MAP can be customized; we check existence dynamically before use
     FIELD_MAP: {
       "name[first]": "first_name",
       "name[last]": "last_name",
@@ -384,7 +389,7 @@ const INTEGRATIONS = {
       "resident_country": "resident_country",
       "trackId": "track_id"
     },
-    AUTO_OPEN_ON_SUBMIT: true
+    AUTO_OPEN_ON_SUBMIT: false // keep users on-site
   }
 };
 
@@ -604,7 +609,7 @@ const svcNamePill = $('svcNamePill'), reqDocs = $('reqDocs');
 const reviewBox = $('reviewBox'), prev3 = $('prev3'), submitBtn = $('submit');
 
 const clientCard = $('clientCard'), trackIdEl=$('trackId'), svcOut=$('svcOut'),
-      qrcodeEl=$('qrcode'), cardData=$('cardData'), dlPDF=$('dlPDF'), waShare=$('waShare'), printCard=$('printCard');
+      qrcodeEl=$('qrcode'), cardData=$('cardData'), dlPDF=$('dlPDF'), dlWord=$('dlWord'), waShare=$('waShare'), printCard=$('printCard');
 
 const toast = $('toast');
 const thanksWrap = $('thanksWrap'), btnViewCard=$('btnViewCard'), btnCloseThanks=$('btnCloseThanks');
@@ -619,8 +624,11 @@ function applyLang(){
   document.documentElement.lang = LANG;
   document.documentElement.dir = (LANG==='ar'?'rtl':'ltr');
 
+  // Head title fix
+  document.title = L('title');
+
   // Labels & texts
-  $('title').textContent = L('title');
+  $('title').textContent = L('title'); // H1
   $('tagline').textContent = L('tagline');
   $('labelCountry').textContent = L('countryLabel');
   $('hintCountry').textContent = L('countryHint');
@@ -660,6 +668,7 @@ function applyLang(){
   $('bPDF').textContent = L('bPDF');
   $('bWA').textContent = L('bWA');
   $('bPrint').textContent = L('bPrint');
+  $('bWord').textContent = (LANG==='ar'?'تنزيل Word':'Download Word');
 
   $('thanksTitle').textContent = L('thanksTitle');
   $('thanksDesc').textContent = L('thanksDesc');
@@ -690,7 +699,6 @@ function getServicesForCountry(){
   const c = country.value;
   if(!c) return [];
   const arr = TEXT.ar.services[c] || [];
-  // choose display name per language
   return arr.map(s => ({ n: (LANG==='ar' ? s.ar : s.en), req: [] }));
 }
 function renderServices(){
@@ -717,7 +725,7 @@ svcSearch.addEventListener('input', debounce(renderServices, 200));
 function selectService(svc){
   selectedService = svc;
   $('svcNamePill').textContent = svc.n;
-  $('reqDocs').innerHTML = ""; // we removed doc list for simplicity; can be added per service
+  $('reqDocs').innerHTML = "";
   setStep(1);
   showToast(L('toastChosen') + svc.n);
 }
@@ -778,16 +786,13 @@ $('submit').addEventListener('click', async ()=>{
   loadingOn();
 
   try{
-    await fireIntegrations(track);
+    const payload = buildPayload(track);
+    await fireIntegrations(payload);
   }catch(e){
     console.warn('Integrations error', e);
     showToast((LANG==='ar'?'تعذر إرسال بعض البيانات.':'Some data could not be sent.'));
   }finally{
     loadingOff();
-  }
-
-  if (INTEGRATIONS.JOTFORM.AUTO_OPEN_ON_SUBMIT) {
-    window.open(buildJotPrefillURL(track), '_blank', 'noopener');
   }
 });
 $('btnViewCard').onclick = ()=>{ thanksWrap.style.display='none'; clientCard.scrollIntoView({behavior:'smooth', block:'center'}); };
@@ -823,32 +828,50 @@ function showClientCard(track){
   clientCard.style.display = 'block';
   waShare.href = `https://wa.me/13139194272?text=${encodeURIComponent('TrackID '+track+' — '+(v('fullName')||'')+' — '+(selectedService?.n||''))}`;
   dlPDF.onclick = ()=> html2pdf().from(clientCard).set({margin:.4, filename:`ClientCard_${track}.pdf`, html2canvas:{scale:2}, jsPDF:{unit:'in',format:'a4'}}).save();
+  dlWord.onclick = ()=> downloadWordFromCard(track);
   printCard.onclick = ()=> window.print();
 }
 
-/* ================= Jotform Prefill (robust) ================= */
+/* ======= Word (.doc) export (HTML-in-DOC, opens in Microsoft Word) ======= */
+function downloadWordFromCard(track){
+  // Build a minimal, RTL-aware HTML doc for Word
+  const html = `
+<!DOCTYPE html><html ${LANG==='ar'?'lang="ar" dir="rtl"':'lang="en" dir="ltr"'}>
+<head><meta charset="utf-8"><title>Client Card ${track}</title></head>
+<body>
+  <h2>${esc(L('cardTitle'))}</h2>
+  <div>${clientCard.querySelector('.inner').innerHTML}</div>
+  <hr/>
+  <p><small>Generated from Alhijrah Smart Portal — TrackID: ${esc(track)}</small></p>
+</body></html>`;
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ClientCard_${track}.doc`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 800);
+}
+
+/* ================= Jotform Prefill (kept for future) ================= */
 function splitNameSmart(full){
   const clean = (full||"").trim().replace(/\s+/g,' ');
   if(!clean) return {first:"", last:""};
   const parts = clean.split(' ');
   if(parts.length===1) return {first:parts[0], last:""};
-  // First = first token, Last = rest
   return {first:parts[0], last:parts.slice(1).join(' ')};
 }
 function buildJotPrefillURL(track){
   const params = new URLSearchParams();
-  // dynamic reading of FIELD_MAP: if the value exists, set it
   const F = INTEGRATIONS.JOTFORM.FIELD_MAP || {};
   const full = v('fullName');
   const {first, last} = splitNameSmart(full);
-
   const trySet = (key, val) => { if(key && val!=null) params.set(key, val); };
 
-  // Name (structured)
   if (F["name[first]"]) trySet("name[first]", first);
   if (F["name[last]"])  trySet("name[last]",  last);
 
-  // Other fields
   if (F.email)            trySet(F.email,            v('email'));
   if (F.phone)            trySet(F.phone,            v('phone'));
   if (F.city)             trySet(F.city,             v('city'));
@@ -860,13 +883,30 @@ function buildJotPrefillURL(track){
   return `${INTEGRATIONS.JOTFORM.FORM_URL}?${params.toString()}`;
 }
 
-/* ================= Integrations ================= */
+/* ================= Google Sheets payload ================= */
+function nowDetroitTimestamp() {
+  const dt = new Date().toLocaleString('en-US', {
+    timeZone: 'America/Detroit',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  });
+  const [m,d,yAndTime] = dt.split('/');
+  const [y, rest] = yAndTime.split(', ');
+  return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')} ${rest}`;
+}
+function makeSubmissionId() {
+  try { return crypto.randomUUID(); } catch(_) {
+    return 'sub_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+  }
+}
 function buildPayload(track){
-  return {
+  const submission_id = makeSubmissionId();
+  const payload = {
+    timestamp: nowDetroitTimestamp(),
     track_id: track,
-    track_url: location.href,
-    country: country.value,
     service: selectedService?.n || '',
+    country: country.value || '',
     fullName: v('fullName'),
     email: v('email'),
     phone: v('phone'),
@@ -874,13 +914,17 @@ function buildPayload(track){
     citizenship: v('citizenship'),
     resident_country: v('residentCountry'),
     details: v('details'),
-    files_count: (files && files.files ? files.files.length : 0)
+    files_count: (files && files.files ? files.files.length : 0),
+    track_url: location.href,
+    submission_id
   };
+  buildPayload._last = payload;
+  return payload;
 }
-async function fireIntegrations(track){
-  const payload = buildPayload(track);
 
-  // EmailJS — safe
+/* ================= Integrations ================= */
+async function fireIntegrations(payload){
+  // EmailJS — optional
   try{
     if(window.emailjs && INTEGRATIONS.EMAILJS.PUBLIC_KEY){
       emailjs.init(INTEGRATIONS.EMAILJS.PUBLIC_KEY);
@@ -897,16 +941,20 @@ async function fireIntegrations(track){
     showToast(LANG==='ar'?'تعذر إرسال البريد.':'Email could not be sent.');
   }
 
-  // Google Sheets via Apps Script — fallback safe
+  // Google Sheets via Apps Script
   try{
     if(INTEGRATIONS.APPS_SCRIPT.ENDPOINT){
       const res = await fetch(INTEGRATIONS.APPS_SCRIPT.ENDPOINT, {
         method:'POST',
-        headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
       });
-      if(!res.ok){
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok || !data?.ok){
         showToast(LANG==='ar'?'تعذر الحفظ في Google Sheets':'Failed to save to Google Sheets');
+      } else if (data.submission_id) {
+        buildPayload._last.submission_id = data.submission_id;
       }
     }
   }catch(e){
@@ -933,59 +981,182 @@ files?.addEventListener('change', ()=>{
   if(!ok) showToast(LANG==='ar'?'تحذير: نوع/حجم ملف غير مسموح.':'Warning: invalid file type/size.');
 });
 
-/* ================= Photo Capture (600×600) ================= */
-const avatarInput = $('avatarInput'), btnCamStart=$('btnCamStart'), btnCamShot=$('btnCamShot'), btnAnalyze=$('btnAnalyze'),
-      cam=$('cam'), photoCanvas=$('photoCanvas'), photoReport=$('photoReport');
-let stream = null, avatarDataURL = "";
+/* ================= Smart Photo Capture (600×600, face-aware) ================= */
+const avatarInput = $('avatarInput'),
+      btnCamStart = $('btnCamStart'),
+      btnCamShot  = $('btnCamShot'),
+      btnAnalyze  = $('btnAnalyze'),
+      cam         = $('cam'),
+      photoCanvas = $('photoCanvas'),
+      photoReport = $('photoReport');
 
-function toSquare600(img){
-  const size = 600;
-  photoCanvas.width = size; photoCanvas.height = size;
-  const ctx = photoCanvas.getContext('2d');
-  const w = img.naturalWidth || img.videoWidth || img.width || 0;
-  const h = img.naturalHeight || img.videoHeight || img.height || 0;
-  const sw = Math.min(w, h)||0, sx = (w - sw)/2, sy = (h - sw)/2;
-  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,size,size);
-  try{ ctx.drawImage(img, sx, sy, sw, sw, 0, 0, size, size); }catch(_){}
-  const data = ctx.getImageData(0,0,size,size).data;
-  let lum=0; for(let i=0;i<data.length;i+=4){ lum += 0.2126*data[i] + 0.7152*data[i+1] + 0.0722*data[i+2]; }
-  lum = lum / (size*size);
+let stream = null, avatarDataURL = "";
+let faceDetector = null;
+
+if ('FaceDetector' in window) {
+  try { faceDetector = new window.FaceDetector({ fastMode: true, maxDetectedFaces: 1 }); } catch (_) { faceDetector = null; }
+}
+
+function setCanvasSize(canvas, w, h) {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width  = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  canvas.style.width  = `${w}px`;
+  canvas.style.height = `${h}px`;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return ctx;
+}
+function avgLuminance(ctx, w, h, stride = 6) {
+  const data = ctx.getImageData(0, 0, w, h).data;
+  let lum = 0, count = 0;
+  for (let y = 0; y < h; y += stride) {
+    for (let x = 0; x < w; x += stride) {
+      const i = (y * w + x) * 4;
+      lum += 0.2126 * data[i] + 0.7152 * data[i+1] + 0.0722 * data[i+2];
+      count++;
+    }
+  }
+  return lum / count;
+}
+async function toSquare600Smart(source, mirrored = false) {
+  const OUT = 600;
+  const ctxOut = setCanvasSize(photoCanvas, OUT, OUT);
+
+  const srcW = source.videoWidth || source.naturalWidth || source.width;
+  const srcH = source.videoHeight || source.naturalHeight || source.height;
+
+  let crop = null;
+
+  if (faceDetector && srcW && srcH) {
+    try {
+      const tmp = document.createElement('canvas');
+      tmp.width = srcW; tmp.height = srcH;
+      const tctx = tmp.getContext('2d');
+
+      if (mirrored) { tctx.translate(srcW, 0); tctx.scale(-1, 1); }
+      tctx.drawImage(source, 0, 0, srcW, srcH);
+
+      const bitmap = await createImageBitmap(tmp);
+      const faces = await faceDetector.detect(bitmap);
+      if (faces && faces.length) {
+        const f = faces[0].boundingBox;
+        const pad = Math.max(f.width, f.height) * 0.4;
+        const cx = f.x + f.width / 2;
+        const cy = f.y + f.height / 2;
+        let side = Math.max(f.width, f.height) + pad * 2;
+
+        let sx = Math.max(0, Math.round(cx - side / 2));
+        let sy = Math.max(0, Math.round(cy - side / 2));
+        if (sx + side > srcW) sx = Math.max(0, Math.round(srcW - side));
+        if (sy + side > srcH) sy = Math.max(0, Math.round(srcH - side));
+
+        side = Math.min(side, srcW, srcH);
+        crop = { sx, sy, sw: Math.round(side), sh: Math.round(side) };
+
+        const faceAreaPct = (f.width * f.height) / (srcW * srcH);
+        if (faceAreaPct < 0.03) crop = null;
+      }
+    } catch (_) { crop = null; }
+  }
+
+  if (!crop) {
+    const sw = Math.min(srcW, srcH);
+    const sx = Math.round((srcW - sw) / 2);
+    const sy = Math.round((srcH - sw) / 2);
+    crop = { sx, sy, sw, sh: sw };
+  }
+
+  ctxOut.fillStyle = '#fff';
+  ctxOut.fillRect(0, 0, OUT, OUT);
+  ctxOut.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, OUT, OUT);
+
+  const luminance = avgLuminance(ctxOut, OUT, OUT);
   avatarDataURL = photoCanvas.toDataURL('image/jpeg', 0.92);
-  photoCanvas.style.display = 'block';
   $('avatar').src = avatarDataURL;
-  photoReport.textContent = (lum > 90)
-    ? (LANG==='ar'?"✅ مناسبة (إضاءة جيدة) – تم التحويل 600×600":"✅ Good lighting – converted 600×600")
-    : (LANG==='ar'?"⚠️ الإضاءة منخفضة – تم التحويل 600×600":"⚠️ Low lighting – converted 600×600");
+  photoCanvas.style.display = 'block';
+
+  const brightOK = luminance > 95;
+  photoReport.textContent =
+    (brightOK
+      ? (LANG==='ar' ? "✅ إضاءة جيدة – تحويل 600×600" : "✅ Good lighting – 600×600")
+      : (LANG==='ar' ? "⚠️ الإضاءة منخفضة – تم التحويل 600×600" : "⚠️ Low lighting – 600×600")
+    ) + (faceDetector ? (LANG==='ar' ? " | كشف وجه تلقائي" : " | Face auto-centered") : "");
   btnAnalyze.disabled = false;
 }
-avatarInput?.addEventListener('change',(e)=>{ const f=e.target.files?.[0]; if(!f) return; const img=new Image(); img.onload=()=>toSquare600(img); img.src=URL.createObjectURL(f); });
-async function startCamera(){
-  try{
-    if(!navigator.mediaDevices?.getUserMedia) throw new Error('MediaDevices not supported');
+
+avatarInput?.addEventListener('change', (e) => {
+  const f = e.target.files?.[0];
+  if (!f) return;
+  const img = new Image();
+  img.onload = () => toSquare600Smart(img, false);
+  img.onerror = () => showToast(LANG==='ar'?'تعذر قراءة الصورة.':'Could not read image.');
+  img.src = URL.createObjectURL(f);
+});
+
+async function startCamera() {
+  try {
     btnCamStart.disabled = true;
-    stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user', width:{ideal:1280}, height:{ideal:720} }, audio:false });
-    cam.srcObject = stream; await cam.play(); cam.style.display='block'; btnCamShot.disabled=false;
-  }catch(err){
-    alert(LANG==='ar'?'لا يمكن الوصول للكاميرا.':'Cannot access camera.');
-    btnCamStart.disabled=false;
+    const constraints = {
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1280 }, aspectRatio: { ideal: 1 }, frameRate: { ideal: 30 } },
+      audio: false
+    };
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error('MediaDevices not supported');
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    cam.srcObject = stream;
+
+    await new Promise((res, rej) => {
+      cam.onloadedmetadata = () => cam.play().then(res).catch(rej);
+      setTimeout(() => (cam.videoWidth>0?res():rej(new Error('Video not ready'))), 1500);
+    });
+
+    cam.style.display = 'block';
+    btnCamShot.disabled = false;
+  } catch (err) {
+    console.warn(err);
+    alert(LANG==='ar'
+      ? 'لا يمكن الوصول للكاميرا. تأكد من السماح وفتح الصفحة عبر HTTPS.'
+      : 'Cannot access camera. Make sure permissions are granted and page is HTTPS.');
+    btnCamStart.disabled = false;
   }
 }
-function stopCamera(){ try{ stream?.getTracks()?.forEach(t=>t.stop()); }catch(_){}
-  cam.pause(); cam.srcObject=null; cam.style.display='none'; btnCamShot.disabled=true; btnCamStart.disabled=false; }
+function stopCamera() {
+  try { stream?.getTracks()?.forEach(t => t.stop()); } catch(_) {}
+  cam.pause(); cam.srcObject = null; cam.style.display = 'none';
+  btnCamShot.disabled = true; btnCamStart.disabled = false;
+}
 btnCamStart?.addEventListener('click', startCamera);
-btnCamShot?.addEventListener('click', ()=>{ if(!stream || cam.videoWidth===0){ alert(LANG==='ar'?'الفيديو غير جاهز.':'Video not ready.'); return; }
-  const tmp=document.createElement('canvas'); tmp.width=cam.videoWidth; tmp.height=cam.videoHeight;
-  tmp.getContext('2d').drawImage(cam,0,0,tmp.width,tmp.height);
-  const img=new Image(); img.onload=()=>{ toSquare600(img); stopCamera(); };
-  img.src=tmp.toDataURL('image/jpeg',0.92);
+
+btnCamShot?.addEventListener('click', async () => {
+  if (!stream || cam.videoWidth === 0) {
+    alert(LANG==='ar'?'الفيديو غير جاهز.':'Video not ready.');
+    return;
+  }
+  const vw = cam.videoWidth, vh = cam.videoHeight;
+  const shot = document.createElement('canvas');
+  shot.width = vw; shot.height = vh;
+  const sctx = shot.getContext('2d');
+  // Unmirror saved frame (preview mirrored via CSS)
+  sctx.translate(vw, 0);
+  sctx.scale(-1, 1);
+  sctx.drawImage(cam, 0, 0, vw, vh);
+
+  const img = new Image();
+  img.onload = async () => { await toSquare600Smart(img, false); stopCamera(); };
+  img.src = shot.toDataURL('image/jpeg', 0.92);
 });
-btnAnalyze?.addEventListener('click', ()=>{ if(!avatarDataURL){ photoReport.textContent=(LANG==='ar'?'حمّل أو التقط صورة أولًا.':'Upload or capture a photo first.'); return; } photoReport.textContent += (LANG==='ar'?' | تم الفحص ✅':' | Checked ✅'); });
+
+btnAnalyze?.addEventListener('click', () => {
+  if (!avatarDataURL) {
+    photoReport.textContent = (LANG==='ar' ? 'حمّل أو التقط صورة أولًا.' : 'Upload or capture a photo first.');
+    return;
+  }
+  photoReport.textContent += (LANG==='ar' ? ' | فحص سريع ✅' : ' | Quick check ✅');
+});
 
 /* ================= UI helpers ================= */
 function showToast(msg, ms=2400){ toast.textContent=msg; toast.style.display='block'; setTimeout(()=>toast.style.display='none',ms); }
 function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
-function loadingOn(){ loading.style.display='block'; }
-function loadingOff(){ loading.style.display='none'; }
 
 /* ================= Init ================= */
 applyLang();
