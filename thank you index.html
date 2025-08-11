@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>شكرًا – بوابة التوظيف الذكية</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- html2pdf for client-side PDF -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root{
@@ -62,6 +61,97 @@
     <tr><td class="label">Nationality | الجنسية</td><td class="value" id="nationality">—</td></tr>
     <tr><td class="label">Phone Number | رقم الهاتف</td><td class="value" id="phone">—</td></tr>
     <tr><td class="label">Email | البريد الإلكتروني</td><td class="value" id="email">—</td></tr>
+    <tr><td class="label">Professional Skills | المهارات المهنية</td><td class="value" id="skills">—</td></tr>
+    <tr><td class="label">Submitted At</td><td class="value" id="submitted">—</td></tr>
+  </table>
+
+  <div class="controls">
+    <button id="btnWhatsApp" class="btn"><i class="fab fa-whatsapp"></i> مشاركة عبر واتساب</button>
+    <button id="btnPDF" class="btn"><i class="fas fa-file-arrow-down"></i> تنزيل PDF</button>
+    <a class="btn" href="mailto:Jobs@alhijrahservices.com?subject=Career%20Gate%20Application"><i class="fas fa-envelope"></i> مراسلة البريد</a>
+  </div>
+  <div class="hint">احتفظ برقم الطلب لسهولة المتابعة.</div>
+
+  <div class="footer">
+    <div class="contact">
+      <div><span style="color:#ffd700">📞</span> +1 313-919-4292</div>
+      <div><span style="color:#ffd700">📧</span> jobs@alhijrahservices.com</div>
+      <div><span style="color:#ffd700">🌐</span> Alhijrahvisa.com</div>
+    </div>
+  </div>
+</main>
+
+<script>
+function generateCaseId(){
+  const dt = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const rnd = Math.floor(100 + Math.random()*900);
+  return `AHJ-${dt}-${rnd}`;
+}
+function readQuery(){
+  const p = new URLSearchParams(location.search);
+  const map = {};
+  for (const [k,v] of p.entries()){
+    map[k] = decodeURIComponent(v||'').trim();
+    map[k.toLowerCase()] = map[k];
+  }
+  return map;
+}
+function getName(q){
+  const direct = q.fullName4 || q.fullname4 || q['fullName4'] || q['fullname4'];
+  const first  = q['fullName4[first]'] || q['fullname4[first]'] || q['fullname4[first]'.toLowerCase()];
+  const last   = q['fullName4[last]']  || q['fullname4[last]']  || q['fullname4[last]'.toLowerCase()];
+  const combo = `${first||''} ${last||''}`.trim();
+  return (direct && direct !== '') ? direct : (combo !== '' ? combo : '—');
+}
+
+(function(){
+  const q = readQuery();
+  const caseId = generateCaseId();
+  const submittedAt = new Date().toLocaleString();
+
+  document.getElementById('caseNumber').textContent = caseId;
+  document.getElementById('submitted').textContent  = submittedAt;
+
+  document.getElementById('fullName').textContent   = getName(q);
+  document.getElementById('dob').textContent        = q.input51 || '—';
+  document.getElementById('nationality').textContent= q.input52 || '—';
+  document.getElementById('phone').textContent      = q.input45 || '—';
+  document.getElementById('email').textContent      = q.email5  || '—';
+  document.getElementById('skills').textContent     = q.input54 || '—';
+
+  document.getElementById('btnWhatsApp').addEventListener('click', ()=>{
+    const lines = [
+      'ALHIJRAH Career Gate – Application',
+      `Case: ${caseId}`,
+      `Name: ${document.getElementById('fullName').textContent}`,
+      `Phone: ${document.getElementById('phone').textContent}`,
+      `Email: ${document.getElementById('email').textContent}`,
+      `Nationality: ${document.getElementById('nationality').textContent}`,
+      `Skills: ${document.getElementById('skills').textContent}`,
+      `Submitted: ${submittedAt}`,
+      '',
+      'Follow-up: jobs@alhijrahservices.com'
+    ].join('\n');
+    const url = 'https://wa.me/13139194292?text=' + encodeURIComponent(lines);
+    window.open(url, '_blank');
+  });
+
+  document.getElementById('btnPDF').addEventListener('click', ()=>{
+    const element = document.getElementById('ticket');
+    const opt = {
+      margin: 10,
+      filename: `${caseId}-CareerGate.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  });
+})();
+</script>
+</body>
+</html>
+s="value" id="email">—</td></tr>
     <tr><td class="label">Professional Skills | المهارات المهنية</td><td class="value" id="skills">—</td></tr>
     <tr><td class="label">Submitted At</td><td class="value" id="submitted">—</td></tr>
   </table>
