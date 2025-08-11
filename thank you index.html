@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>شكرًا – بوابة التوظيف الذكية</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- html2pdf for client-side PDF -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root{
+    --bg1:#0b0f3d; --bg2:#141850; --gold:#ffd700; --gold2:#d4af37;
+    --accent:#00f7ff; --accent2:#8800ff; --muted:#cfd8ff;
+    --glass:rgba(255,255,255,0.05); --glass-border:rgba(255,255,255,0.15);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:'Cairo',system-ui,-apple-system,Segoe UI,sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2)); color:#fff;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .card{
+    width:100%; max-width:860px; border-radius:18px; padding:24px;
+    background:var(--glass); border:1px solid var(--glass-border);
+    box-shadow:0 0 30px rgba(0,247,255,.3);
+  }
+  .header{ text-align:center; margin-bottom:22px; border-bottom:1px solid #2a2f55; padding-bottom:16px }
+  .header img{ max-width:140px; margin-bottom:10px }
+  .header h1{ margin:0; color:var(--accent); font-size:28px; font-weight:800; text-shadow:0 0 10px var(--accent),0 0 20px var(--accent2) }
+  .header h3{ margin:10px 0; color:#bfa8ff; font-size:18px; font-weight:500 }
+  .header p{ margin:10px 0 0; font-weight:700; background:linear-gradient(90deg,var(--gold),#ffa500);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent }
+  .ok{ text-align:center; color:#bfa8ff; margin:8px 0 18px; font-size:18px }
+  table{ width:100%; border-collapse:collapse; font-size:14px; line-height:1.7; border:1px solid #1f2345; border-radius:10px; overflow:hidden }
+  tr:nth-child(odd){ background:#161a3a } tr:nth-child(even){ background:#1d2144 }
+  td{ padding:12px; border-bottom:1px solid #2a2f55 }
+  td.label{ width:36%; color:var(--accent) } td.value{ color:#fff }
+  .controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px }
+  .btn{ border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08); color:#fff; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:800 }
+  .btn:hover{ transform:translateY(-1px) }
+  .hint{ text-align:center; color:var(--muted); margin-top:8px; font-size:.95rem }
+  .footer{ text-align:center; margin-top:20px; padding-top:12px; border-top:1px solid #2a2f55 }
+  .contact div{ margin:5px 0 }
+</style>
+</head>
+<body>
+<main id="ticket" class="card" aria-live="polite">
+  <div class="header">
+    <img src="https://drive.google.com/uc?id=1RMiZhmDaciD0QDxIMMrHRTYXHP5UK5Pl" alt="Al Hijrah Logo">
+    <h1>مرحباً بكم في بوابة التوظيف – مكتب الهجرة</h1>
+    <h3>Career Gate – Alhijrah Services</h3>
+    <p>نُعيد تعريف تجربة التوظيف والهجرة – دقة، حماية، وكرامة</p>
+  </div>
+
+  <div class="ok">تم استلام طلبك بنجاح ✅ – سنتواصل معك قريبًا</div>
+
+  <table role="table" aria-label="ملخص طلبك">
+    <tr><td class="label">Case Number</td><td class="value" id="caseNumber">—</td></tr>
+    <tr><td class="label">Application Status | حالة الطلب</td><td class="value" id="status">Received</td></tr>
+    <tr><td class="label">Full Name | الاسم الكامل</td><td class="value" id="fullName">—</td></tr>
+    <tr><td class="label">Date of Birth | تاريخ الميلاد</td><td class="value" id="dob">—</td></tr>
+    <tr><td class="label">Nationality | الجنسية</td><td class="value" id="nationality">—</td></tr>
+    <tr><td class="label">Phone Number | رقم الهاتف</td><td class="value" id="phone">—</td></tr>
+    <tr><td class="label">Email | البريد الإلكتروني</td><td class="value" id="email">—</td></tr>
+    <tr><td class="label">Professional Skills | المهارات المهنية</td><td class="value" id="skills">—</td></tr>
+    <tr><td class="label">Submitted At</td><td class="value" id="submitted">—</td></tr>
+  </table>
+
+  <div class="controls">
+    <button id="btnWhatsApp" class="btn"><i class="fab fa-whatsapp"></i> مشاركة عبر واتساب</button>
+    <button id="btnPDF" class="btn"><i class="fas fa-file-arrow-down"></i> تنزيل PDF</button>
+    <a class="btn" href="mailto:Jobs@alhijrahservices.com?subject=Career%20Gate%20Application"><i class="fas fa-envelope"></i> مراسلة البريد</a>
+  </div>
+  <div class="hint">احتفظ برقم الطلب لسهولة المتابعة.</div>
+
+  <div class="footer">
+    <div class="contact">
+      <div><span style="color:#ffd700">📞</span> +1 313-919-4292</div>
+      <div><span style="color:#ffd700">📧</span> jobs@alhijrahservices.com</div>
+      <div><span style="color:#ffd700">🌐</span> Alhijrahvisa.com</div>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ---------- helpers ---------- */
+function generateCaseId(){
+  const dt = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const rnd = Math.floor(100 + Math.random()*900);
+  return `AHJ-${dt}-${rnd}`;
+}
+function readQuery(){
+  const p = new URLSearchParams(location.search);
+  const map = {};
+  for (const [k,v] of p.entries()){
+    map[k] = decodeURIComponent(v || '').trim();
+    map[k.toLowerCase()] = map[k]; // also store lowercase alias
+  }
+  return map;
+}
+function getName(q){
+  // Try fullName4; fallback to first/last if provided
+  const direct = q.fullName4 || q.fullname4 || q['fullName4'] || q['fullname4'];
+  const first  = q['fullName4[first]'] || q['fullname4[first]'] || q['fullname4[first]'.toLowerCase()];
+  const last   = q['fullName4[last]']  || q['fullname4[last]']  || q['fullname4[last]'.toLowerCase()];
+  const combo = `${first||''} ${last||''}`.trim();
+  return (direct && direct !== '') ? direct : (combo !== '' ? combo : '—');
+}
+
+/* ---------- fill UI ---------- */
+(function(){
+  const q = readQuery();
+
+  const caseId = generateCaseId();
+  const submittedAt = new Date().toLocaleString();
+
+  document.getElementById('caseNumber').textContent = caseId;
+  document.getElementById('submitted').textContent  = submittedAt;
+
+  document.getElementById('fullName').textContent   = getName(q);
+  document.getElementById('dob').textContent        = q.input51 || '—';
+  document.getElementById('nationality').textContent= q.input52 || '—';
+  document.getElementById('phone').textContent      = q.input45 || '—';
+  document.getElementById('email').textContent      = q.email5  || '—';
+  document.getElementById('skills').textContent     = q.input54 || '—';
+
+  // WhatsApp share
+  document.getElementById('btnWhatsApp').addEventListener('click', ()=>{
+    const lines = [
+      'ALHIJRAH Career Gate – Application',
+      `Case: ${caseId}`,
+      `Name: ${document.getElementById('fullName').textContent}`,
+      `Phone: ${document.getElementById('phone').textContent}`,
+      `Email: ${document.getElementById('email').textContent}`,
+      `Nationality: ${document.getElementById('nationality').textContent}`,
+      `Skills: ${document.getElementById('skills').textContent}`,
+      `Submitted: ${submittedAt}`,
+      '',
+      'Follow-up: jobs@alhijrahservices.com'
+    ].join('\n');
+    const url = 'https://wa.me/13139194292?text=' + encodeURIComponent(lines);
+    window.open(url, '_blank');
+  });
+
+  // PDF download (only the ticket element)
+  document.getElementById('btnPDF').addEventListener('click', ()=>{
+    const element = document.getElementById('ticket');
+    const opt = {
+      margin:       10,
+      filename:     `${caseId}-CareerGate.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  });
+})();
+</script>
+</body>
+</html>
