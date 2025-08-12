@@ -4,42 +4,45 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>تم استلام طلبك - بوابة التوظيف</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --bg1:#0b1430; --bg2:#0f1c3f; --bg3:#192a6e;
+    --bg1:#0a1440; --bg2:#0e1b55; --bg3:#132a78;
     --glass: rgba(255,255,255,.06);
     --stroke: rgba(255,255,255,.18);
     --gold:#ffd700; --gold2:#ffe68a;
-    --lav:#bfa8ff; --text:#f7f9ff; --muted:#cfd3ff;
+    --cyan:#30e0b0; --lav:#bfa8ff;
+    --text:#f7f9ff; --muted:#cfd3ff;
     --glow: 0 0 48px rgba(191,168,255,.25), 0 0 24px rgba(255,215,0,.18);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0; font-family:'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color:var(--text); background:
-      radial-gradient(1200px 800px at 15% 10%, #27408955, transparent 60%),
-      radial-gradient(900px 700px at 85% 90%, #12204f55, transparent 55%),
+    color:var(--text);
+    background:
+      radial-gradient(1200px 800px at 12% 8%, #27408955, transparent 60%),
+      radial-gradient(900px 700px at 88% 90%, #12204f55, transparent 55%),
       linear-gradient(135deg, var(--bg1), var(--bg2) 40%, var(--bg3));
     display:flex; align-items:center; justify-content:center; padding:24px;
     overflow-x:hidden;
   }
 
-  /* soft geometric scene (CSS-only) */
+  /* animated blue/gold scene (CSS only) */
   .scene{position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none; filter:saturate(1.05)}
-  .orb, .ring, .chip{position:absolute; opacity:.65; mix-blend-mode:screen}
-  .orb{ width:420px; height:420px; border-radius:50%;
+  .orb,.ring,.chip{position:absolute; opacity:.6; mix-blend-mode:screen; will-change:transform,opacity}
+  .orb{ width:440px; height:440px; border-radius:50%;
         background:radial-gradient(circle at 30% 30%, #8c7cff, transparent 60%),
                    radial-gradient(circle at 70% 70%, #ffe27a, transparent 65%);
-        box-shadow:0 0 80px #8c7cff33, 0 0 60px #ffe27a22; animation: float 16s ease-in-out infinite;}
-  .orb.o1{ top:-120px; left:-120px; animation-delay:-2s}
-  .orb.o2{ bottom:-140px; right:-160px; transform:scale(.85); animation-delay:-6s}
-  .ring{ width:680px; height:680px; border-radius:50%; border:1px dashed rgba(255,255,255,.15);
-         box-shadow:inset 0 0 80px #ffffff0f; top:-220px; right:-180px; animation: spin 28s linear infinite}
-  .chip{ width:180px; height:180px; border-radius:24px;
+        box-shadow:0 0 80px #8c7cff33, 0 0 60px #ffe27a22; animation: float 18s ease-in-out infinite;}
+  .orb.o1{ top:-140px; left:-140px; animation-delay:-2s}
+  .orb.o2{ bottom:-160px; right:-180px; transform:scale(.85); animation-delay:-7s}
+  .ring{ width:720px; height:720px; border-radius:50%; border:1px dashed rgba(255,255,255,.14);
+         box-shadow:inset 0 0 90px #ffffff10; top:-240px; right:-200px; animation: spin 30s linear infinite}
+  .chip{ width:200px; height:200px; border-radius:24px;
          background:linear-gradient(135deg, #89a4ff22, #ffe27a17);
          border:1px solid rgba(255,255,255,.12); top:18%; left:8%;
-         transform:rotate(8deg); animation: float 18s ease-in-out infinite reverse;}
+         transform:rotate(8deg); animation: float 20s ease-in-out infinite reverse;}
   @keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-14px) translateX(8px)}}
   @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -51,7 +54,7 @@
     box-shadow: 0 12px 40px rgba(0,0,0,.35), inset 0 0 32px rgba(255,255,255,.05);
   }
   .card::before{
-    content:""; position:absolute; inset:-2px; border-radius:26px; z-index:-1; opacity:.42;
+    content:""; position:absolute; inset:-2px; border-radius:26px; z-index:-1; opacity:.44;
     background: conic-gradient(from 220deg at 50% 50%, var(--lav), var(--gold), var(--lav));
     filter: blur(10px);
   }
@@ -65,8 +68,8 @@
   .subtitle{margin:0; color:var(--lav); font-size:clamp(14px, 1.8vw, 18px)}
   .lead{margin:10px auto 0; max-width:760px; color:var(--muted); line-height:1.8; text-wrap:balance}
 
-  .status, .case { text-align:center; margin:18px 0 6px; font-weight:800; color:var(--lav);
-                   font-size:clamp(15px, 2vw, 19px) }
+  .status,.case{ text-align:center; margin:18px 0 6px; font-weight:800; color:var(--lav);
+                 font-size:clamp(15px, 2vw, 19px)}
   .pill{
     display:inline-block; padding:.35rem .8rem; border-radius:999px; font-weight:800;
     background:linear-gradient(45deg, #ffffff10, #ffffff05);
@@ -105,6 +108,10 @@
   .tag{ padding:6px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.22);
         background:rgba(255,255,255,.06); color:#fff; font-weight:700 }
 
+  .note{margin-top:10px; text-align:center; color:#cfe8ff; font-size:12px; opacity:.9}
+
+  .dim{opacity:.7} .ok{color:#9fffcf} .bad{color:#ffb3b3}
+
   @media (max-width:700px){
     .grid{ grid-template-columns: 1fr }
     .label{ border-bottom:none }
@@ -113,8 +120,7 @@
 </style>
 </head>
 <body>
-
-<!-- decorative glass background -->
+<!-- animated background -->
 <div class="scene" aria-hidden="true">
   <div class="orb o1"></div>
   <div class="orb o2"></div>
@@ -136,80 +142,188 @@
       </p>
     </header>
 
-    <!-- Status -->
+    <!-- dynamic status + case -->
     <p class="status">
       Application Status | حالة الطلب:
-      <span class="pill">{applicationStatus}</span>
+      <span id="status" class="pill">Received</span>
     </p>
-
-    <!-- Case Number (uses your Unique ID with Career- prefix) -->
     <p class="case">
       Case Number:
-      <span class="pill">{uniqueId}</span>
+      <span id="caseNumber" class="pill">Career-XXXXXX</span>
     </p>
 
-    <!-- Summary -->
+    <!-- summary -->
     <section class="grid" aria-label="Submission Summary">
-      <div class="row">
-        <div class="label">Full Name | الاسم الكامل</div>
-        <div class="value">{fullName4}</div>
-      </div>
-      <div class="row">
-        <div class="label">Date of Birth | تاريخ الميلاد</div>
-        <div class="value">{input51}</div>
-      </div>
-      <div class="row">
-        <div class="label">Nationality | الجنسية</div>
-        <div class="value">{input52}</div>
-      </div>
-      <div class="row">
-        <div class="label">Phone | الهاتف</div>
-        <div class="value">{input45}</div>
-      </div>
-      <div class="row">
-        <div class="label">Email | البريد الإلكتروني</div>
-        <div class="value">{email5}</div>
-      </div>
-      <div class="row">
-        <div class="label">City | المدينة</div>
-        <div class="value">{address:city}</div>
-      </div>
-      <div class="row">
-        <div class="label">Professional Skills | المهارات</div>
-        <div class="value">{input54}</div>
-      </div>
+      <div class="row"><div class="label">Full Name | الاسم الكامل</div><div id="fullName" class="value">—</div></div>
+      <div class="row"><div class="label">Date of Birth | تاريخ الميلاد</div><div id="dob" class="value">—</div></div>
+      <div class="row"><div class="label">Nationality | الجنسية</div><div id="nationality" class="value">—</div></div>
+      <div class="row"><div class="label">Phone | الهاتف</div><div id="phone" class="value">—</div></div>
+      <div class="row"><div class="label">Email | البريد الإلكتروني</div><div id="email" class="value">—</div></div>
+      <div class="row"><div class="label">City | المدينة</div><div id="city" class="value">—</div></div>
+      <div class="row"><div class="label">Professional Skills | المهارات</div><div id="skills" class="value">—</div></div>
     </section>
 
-    <!-- Actions -->
+    <!-- actions -->
     <nav class="actions" role="group" aria-label="Actions">
-      <a class="btn" href="{pdf-link}" target="_blank" rel="noopener">تحميل PDF | Download PDF</a>
-      <a class="btn alt" href="{edit_link}" target="_blank" rel="noopener">تعديل الطلب | Edit Submission</a>
-      <a class="btn ghost" href="https://alhijrahvisa.com/track?case={uniqueId}" target="_blank" rel="noopener">تتبّع طلبي | Track My Case</a>
-      <a class="btn ghost"
-         href="https://wa.me/13139194292?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%82%D9%85%D8%AA%D9%8F%20%D8%A8%D8%AA%D9%82%D8%AF%D9%8A%D9%85%20%D9%86%D9%85%D9%88%D8%B0%D8%AC%20%D8%A7%D9%84%D8%AA%D9%88%D8%B8%D9%8A%D9%81.%0A%0A*Case%20Number:%20{uniqueId}%0A*Name:%20{fullName4}%0A*Phone:%20{input45}%0A*Email:%20{email5}%0A*Status:%20{applicationStatus}%0A*PDF:%20{pdf-link}"
-         target="_blank" rel="noopener">
-        إرسال عبر WhatsApp
-      </a>
+      <a id="pdfBtn"  class="btn"      href="#" target="_blank" rel="noopener" style="display:none">تحميل PDF | Download PDF</a>
+      <a id="editBtn" class="btn alt"  href="#" target="_blank" rel="noopener" style="display:none">تعديل الطلب | Edit Submission</a>
+      <a id="trackBtn" class="btn ghost" href="#" target="_blank" rel="noopener">تتبّع طلبي | Track My Case</a>
+      <a id="waBtn"    class="btn ghost" href="#" target="_blank" rel="noopener">إرسال عبر WhatsApp</a>
     </nav>
 
+    <p id="syncNote" class="note dim">يتم تحديث الصفحة تلقائيًا عند توفر بيانات أحدث…</p>
+
     <footer class="footer">
-      <div>تصميم هندسي زجاجي فاخر — تجربة رقمية شفافة، احترافية، وراقية.</div>
+      <div>تصميم ملكي أزرق وذهبي — تجربة رقمية شفافة، احترافية، وراقية.</div>
       <div class="contacts">
         <span class="tag">📞 +1 313-919-4292</span>
         <span class="tag">📧 jobs@alhijrahservices.com</span>
         <span class="tag">🌐 Alhijrahvisa.com</span>
       </div>
       <div style="margin-top:8px">
-        Career Gate powered by <strong>Alhijrah Services</strong> • Submission ID: {id}
+        Career Gate powered by <strong>Alhijrah Services</strong>
       </div>
     </footer>
   </div>
 </div>
 
-<!-- optional tiny English footer -->
+<!-- JS: reads URL params, renders, then (optionally) pulls freshest data from Apps Script -->
+<script>
+(function(){
+  /* ====== CONFIG ====== */
+  // If you want auto-sync with your Google Apps Script (prefer newest):
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvP5-ZOleoCQSHvXXzp_3V4olSuVDTdloU0oyW1IsDzjMYCNwNISuYn31LOsN8hBCW6Q/exec"; // leave "" to disable
+  const TRACK_BASE = "https://alhijrahvisa.com/track?case=";
+
+  /* ====== Helpers ====== */
+  const $ = id => document.getElementById(id);
+  const set = (id, val, fallback='—') => { const el = $(id); if (el) el.textContent = (val && String(val).trim()) ? String(val).trim() : fallback; };
+  const qp = new URLSearchParams(location.search);
+  const pick = (...keys) => {
+    for (const k of keys){ const v = qp.get(k); if (v && String(v).trim()) return String(v).trim(); }
+    return "";
+  };
+  const normPhone = s => (s||"").replace(/[^\d+]/g,"");
+
+  /* ====== Read from URL (Jotform redirect) ====== */
+  const ui = pick("uniqueId","uniqueID","uid","case","caseNumber");
+  const base = {
+    caseNumber: ui,
+    status:     pick("applicationStatus","status") || "Received",
+    fullName:   pick("fullName4","fullName","name") || [pick("firstName","first"), pick("lastName","last")].filter(Boolean).join(" "),
+    dob:        pick("input51","dob","dateOfBirth"),
+    nationality:pick("input52","nationality"),
+    phone:      normPhone(pick("input45","phone","tel","mobile")),
+    email:      pick("email5","email"),
+    city:       pick("address_city","address:city","city"),
+    skills:     pick("input54","skills","professionalSkills"),
+    pdf:        pick("pdf","pdf-link"),
+    edit:       pick("edit","edit_link","editLink"),
+    submissionId: pick("id","submissionID","sid")
+  };
+
+  // If your Unique ID must start with "Career-", fix it up:
+  function normalizeCaseNumber(v){
+    if(!v) return "";
+    return /^career-/i.test(v) ? v.replace(/^career-/i,"Career-") : (/^\d{6}$/.test(v) ? "Career-"+v : v);
+  }
+  base.caseNumber = normalizeCaseNumber(base.caseNumber);
+
+  /* ====== Render first (instant) ====== */
+  set("status", base.status);
+  set("caseNumber", base.caseNumber || (base.submissionId ? ("ALH-"+new Date().toISOString().slice(0,10).replace(/-/g,"")+"-"+base.submissionId) : ""));
+  set("fullName", base.fullName);
+  set("dob", base.dob);
+  set("nationality", base.nationality);
+  set("phone", base.phone);
+  set("email", base.email);
+  set("city", base.city);
+  set("skills", base.skills);
+
+  const trackHref = TRACK_BASE + encodeURIComponent(base.caseNumber || "");
+  const pdfBtn = $("pdfBtn"), editBtn = $("editBtn"), trackBtn = $("trackBtn"), waBtn = $("waBtn");
+  if (pdfBtn && base.pdf){ pdfBtn.href = base.pdf; pdfBtn.style.display = "inline-flex"; }
+  if (editBtn && base.edit){ editBtn.href = base.edit; editBtn.style.display = "inline-flex"; }
+  if (trackBtn){ trackBtn.href = trackHref; }
+  if (waBtn){
+    const lines = [
+      "ALHIJRAH – Career Gate",
+      `Case: ${base.caseNumber||"—"}`,
+      `Status: ${base.status||"—"}`,
+      `Name: ${base.fullName||"—"}`,
+      `Phone: ${base.phone||"—"}`,
+      `Email: ${base.email||"—"}`,
+      `City: ${base.city||"—"}`
+    ].join("\n");
+    waBtn.href = "https://wa.me/13139194292?text=" + encodeURIComponent(lines);
+  }
+
+  /* ====== Prefer newest (optional server sync) ====== */
+  async function trySync(){
+    const note = $("syncNote");
+    if(!SCRIPT_URL || !base.caseNumber){ if(note){ note.textContent = "تم العرض من بيانات الإرسال. (لا يوجد تزامن خادم)"; } return; }
+    try{
+      if(note){ note.innerHTML = '<span class="dim">جاري التحقق من أحدث البيانات…</span>'; }
+      const url = `${SCRIPT_URL}?by=case&key=${encodeURIComponent(base.caseNumber)}`;
+      const r = await fetch(url, {headers:{Accept:"application/json"}, cache:"no-store"});
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      const d = await r.json();
+      if(d && !d.error){
+        // merge, preferring server fields if present
+        const merged = {
+          caseNumber: d.caseNumber || d.caseId || base.caseNumber,
+          status: d.applicationStatus || d.status || base.status,
+          fullName: d.fullName || [d.firstName,d.lastName].filter(Boolean).join(" ") || base.fullName,
+          dob: d.dateOfBirth || d.dob || base.dob,
+          nationality: d.nationality || base.nationality,
+          phone: d.phone || base.phone,
+          email: d.email || base.email,
+          city: d.address?.city || d.city || base.city,
+          skills: d.skills || d.professionalSkills || base.skills,
+          pdf: base.pdf,  // keep URL params if provided
+          edit: d.meta?.editUrl || base.edit
+        };
+        set("status", merged.status);
+        set("caseNumber", merged.caseNumber);
+        set("fullName", merged.fullName);
+        set("dob", merged.dob);
+        set("nationality", merged.nationality);
+        set("phone", merged.phone);
+        set("email", merged.email);
+        set("city", merged.city);
+        set("skills", merged.skills);
+
+        if(editBtn && merged.edit){ editBtn.href = merged.edit; editBtn.style.display="inline-flex"; }
+        if(trackBtn){ trackBtn.href = TRACK_BASE + encodeURIComponent(merged.caseNumber||""); }
+        if(waBtn){
+          const lines2 = [
+            "ALHIJRAH – Career Gate",
+            `Case: ${merged.caseNumber||"—"}`,
+            `Status: ${merged.status||"—"}`,
+            `Name: ${merged.fullName||"—"}`,
+            `Phone: ${merged.phone||"—"}`,
+            `Email: ${merged.email||"—"}`,
+            `City: ${merged.city||"—"}`
+          ].join("\n");
+          waBtn.href = "https://wa.me/13139194292?text=" + encodeURIComponent(lines2);
+        }
+        if(note){ note.innerHTML = '<span class="ok">تمت مزامنة أحدث حالة تلقائيًا.</span>'; }
+      }else{
+        if(note){ note.innerHTML = '<span class="bad">تعذر جلب أحدث البيانات من الخادم.</span>'; }
+      }
+    }catch(e){
+      const note = $("syncNote");
+      if(note){ note.innerHTML = '<span class="bad">خطأ في الاتصال بالخادم.</span>'; }
+      console.error(e);
+    }
+  }
+  trySync();
+})();
+</script>
+
+<!-- tiny English footer (optional) -->
 <div style="direction:ltr; text-align:center; margin-top:12px; opacity:.55; font:12px/1.7 system-ui">
   Need help? Email <a href="mailto:jobs@alhijrahservices.com">jobs@alhijrahservices.com</a>
 </div>
-
 </body>
 </html>
