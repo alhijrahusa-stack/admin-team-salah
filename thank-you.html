@@ -3,109 +3,87 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>تم استلام طلبك – بوابة التوظيف | Alhijrah Services</title>
+<title>تم استلام طلبك - بوابة التوظيف</title>
 <style>
   :root{
-    --bg1:#0a1330; --bg2:#0f1c3f; --bg3:#1b2b6e;
-    --glass:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.16);
-    --text:#f7f9ff; --muted:#cfd3ff;
-    --gold:#ffd700; --gold2:#ffe68a; --lav:#bfa8ff; --cyan:#9ef9ff; --green:#9cffc2; --orange:#ffd6a2;
+    --bg1:#0b1430; --bg2:#0f1c3f; --bg3:#192a6e;
+    --glass: rgba(255,255,255,.06);
+    --stroke: rgba(255,255,255,.18);
+    --gold:#ffd700; --gold2:#ffe68a;
+    --lav:#bfa8ff; --text:#f7f9ff; --muted:#cfd3ff;
+    --glow: 0 0 48px rgba(191,168,255,.25), 0 0 24px rgba(255,215,0,.18);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0; font-family:'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color:var(--text);
-    background:
-      radial-gradient(1200px 800px at 12% 10%, #2a479455, transparent 60%),
-      radial-gradient(900px 700px at 88% 92%, #12204f55, transparent 55%),
+    color:var(--text); background:
+      radial-gradient(1200px 800px at 15% 10%, #27408955, transparent 60%),
+      radial-gradient(900px 700px at 85% 90%, #12204f55, transparent 55%),
       linear-gradient(135deg, var(--bg1), var(--bg2) 40%, var(--bg3));
     display:flex; align-items:center; justify-content:center; padding:24px;
     overflow-x:hidden;
   }
 
-  /* مشهد خلفية رقمية مستقبلية (CSS فقط) */
-  .scene{ position:fixed; inset:0; z-index:-2; pointer-events:none; overflow:hidden; }
-  .glow{
-    position:absolute; border-radius:50%; filter:blur(22px); opacity:.55; mix-blend-mode:screen;
-    background:radial-gradient(circle at 30% 30%, #8c7cff, transparent 60%),
-               radial-gradient(circle at 70% 70%, #ffe27a, transparent 65%);
-    animation:float 16s ease-in-out infinite;
-  }
-  .glow.g1{ width:460px; height:460px; top:-160px; left:-160px; animation-delay:-2s }
-  .glow.g2{ width:400px; height:400px; bottom:-150px; right:-170px; animation-delay:-6s; transform:scale(.9) }
-  .gridlines{
-    position:absolute; inset:-10%; opacity:.15; background:
-      radial-gradient(closest-side, transparent 90%, #ffffff14 92%, transparent 94%) 0 0/120px 120px,
-      radial-gradient(closest-side, transparent 90%, #ffffff08 92%, transparent 94%) 60px 60px/120px 120px;
-    mask-image: radial-gradient(circle at 50% 50%, black 45%, transparent 75%);
-    animation:slow-pan 48s linear infinite;
-  }
-  @keyframes slow-pan{ to{transform:translateX(-120px) translateY(-60px)} }
-  @keyframes float{ 0%,100%{transform:translate(0,0)} 50%{transform:translate(10px,-14px)} }
+  /* soft geometric scene (CSS-only) */
+  .scene{position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none; filter:saturate(1.05)}
+  .orb, .ring, .chip{position:absolute; opacity:.65; mix-blend-mode:screen}
+  .orb{ width:420px; height:420px; border-radius:50%;
+        background:radial-gradient(circle at 30% 30%, #8c7cff, transparent 60%),
+                   radial-gradient(circle at 70% 70%, #ffe27a, transparent 65%);
+        box-shadow:0 0 80px #8c7cff33, 0 0 60px #ffe27a22; animation: float 16s ease-in-out infinite;}
+  .orb.o1{ top:-120px; left:-120px; animation-delay:-2s}
+  .orb.o2{ bottom:-140px; right:-160px; transform:scale(.85); animation-delay:-6s}
+  .ring{ width:680px; height:680px; border-radius:50%; border:1px dashed rgba(255,255,255,.15);
+         box-shadow:inset 0 0 80px #ffffff0f; top:-220px; right:-180px; animation: spin 28s linear infinite}
+  .chip{ width:180px; height:180px; border-radius:24px;
+         background:linear-gradient(135deg, #89a4ff22, #ffe27a17);
+         border:1px solid rgba(255,255,255,.12); top:18%; left:8%;
+         transform:rotate(8deg); animation: float 18s ease-in-out infinite reverse;}
+  @keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-14px) translateX(8px)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-  .wrap{ width:min(1000px, 96vw) }
+  .wrap{ width:min(980px, 96vw) }
   .card{
-    position:relative; overflow:hidden; border-radius:24px; padding:28px;
     background:var(--glass); border:1px solid var(--stroke);
+    border-radius:24px; padding:28px; position:relative; overflow:hidden;
     backdrop-filter: blur(14px);
     box-shadow: 0 12px 40px rgba(0,0,0,.35), inset 0 0 32px rgba(255,255,255,.05);
   }
   .card::before{
     content:""; position:absolute; inset:-2px; border-radius:26px; z-index:-1; opacity:.42;
-    background:conic-gradient(from 230deg at 50% 50%, var(--lav), var(--gold), var(--lav));
-    filter:blur(10px);
+    background: conic-gradient(from 220deg at 50% 50%, var(--lav), var(--gold), var(--lav));
+    filter: blur(10px);
   }
-  .edge{ position:absolute; inset:1px; border-radius:22px; pointer-events:none;
-         background:linear-gradient(180deg, #ffffff14, transparent);
-         box-shadow:inset 0 0 60px #ffffff10; }
+  .edge{position:absolute; inset:1px; border-radius:22px; pointer-events:none;
+    background:linear-gradient(180deg, #ffffff10, transparent); box-shadow:inset 0 0 60px #ffffff10;}
 
   .header{text-align:center}
   .logo{max-width:120px; filter:drop-shadow(0 2px 8px rgba(0,0,0,.45))}
   .title{margin:10px 0 2px; font-weight:800; color:var(--gold);
          font-size:clamp(22px, 2.6vw, 30px); letter-spacing:.2px}
   .subtitle{margin:0; color:var(--lav); font-size:clamp(14px, 1.8vw, 18px)}
-  .lead{margin:10px auto 0; max-width:780px; color:var(--muted); line-height:1.9; text-wrap:balance}
+  .lead{margin:10px auto 0; max-width:760px; color:var(--muted); line-height:1.8; text-wrap:balance}
 
-  .status, .case{ text-align:center; margin:18px 0 6px; font-weight:800; color:var(--lav);
-                  font-size:clamp(15px, 2vw, 19px) }
+  .status, .case { text-align:center; margin:18px 0 6px; font-weight:800; color:var(--lav);
+                   font-size:clamp(15px, 2vw, 19px) }
   .pill{
-    display:inline-block; padding:.38rem .85rem; border-radius:999px; font-weight:900;
-    background:linear-gradient(45deg, #ffffff12, #ffffff06);
-    border:1px solid rgba(255,255,255,.22); color:#fff;
-    box-shadow: 0 0 48px rgba(191,168,255,.25), 0 0 24px rgba(255,215,0,.18);
+    display:inline-block; padding:.35rem .8rem; border-radius:999px; font-weight:800;
+    background:linear-gradient(45deg, #ffffff10, #ffffff05);
+    border:1px solid rgba(255,255,255,.22); color:#fff; box-shadow: var(--glow);
   }
-  .pill.ok{ border-color:#6ee7b755; background:linear-gradient(45deg,#3ddc9733,#ffffff08) }   /* Received/OK */
-  .pill.id{ border-color:#ffe27a88 }
-  .meta{ display:inline-flex; gap:.4rem; align-items:center; flex-wrap:wrap }
 
-  /* شريط الخطوة التالية */
-  .next{
-    margin:16px 0 6px; padding:14px; border-radius:16px;
-    background:linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-    border:1px solid rgba(255,255,255,.12);
-  }
-  .next h3{
-    margin:0 0 6px; font-size:clamp(16px, 2.2vw, 18px); color:var(--gold); font-weight:900
-  }
-  .next p{ margin:.2rem 0; color:var(--muted) }
-
-  /* ملخص البيانات */
   .grid{
-    display:grid; gap:10px; margin-top:14px;
-    grid-template-columns: 1fr 2fr;
-    background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.12); border-radius:16px; overflow:hidden;
+    display:grid; gap:10px; margin-top:16px; grid-template-columns: 1fr 2fr;
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12);
+    border-radius:16px; overflow:hidden;
   }
   .row{display:contents}
-  .label{
-    padding:12px 14px; font-weight:800; color:var(--gold);
-    border-bottom:1px solid rgba(255,255,255,.06);
-    background:linear-gradient(90deg, rgba(255,255,255,.04), transparent)
-  }
-  .value{ padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.06) }
+  .label{padding:12px 14px; font-weight:800; color:var(--gold);
+         border-bottom:1px solid rgba(255,255,255,.06);
+         background:linear-gradient(90deg, rgba(255,255,255,.04), transparent)}
+  .value{padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.06)}
 
-  /* أزرار الإجراءات */
   .actions{ display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:18px }
   .btn{
     appearance:none; border:none; cursor:pointer; text-decoration:none; outline:none;
@@ -115,11 +93,9 @@
     transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
     display:inline-flex; align-items:center; gap:10px
   }
-  .btn.alt{
-    color:#fff; background:linear-gradient(45deg, #8f7eff, #beaaff);
-    box-shadow:0 10px 26px rgba(190,170,255,.28)
-  }
-  .btn.ghost{ color:#fff; background:transparent; border:1px solid rgba(255,255,255,.28) }
+  .btn.alt{ color:#fff; background:linear-gradient(45deg, #8f7eff, #beaaff);
+            box-shadow:0 10px 26px rgba(190,170,255,.28)}
+  .btn.ghost{ color:#fff; background:transparent; border:1px solid rgba(255,255,255,.28)}
   .btn:hover{ transform:translateY(-2px); box-shadow:0 12px 30px rgba(255,215,0,.36) }
   .btn.alt:hover{ box-shadow:0 12px 30px rgba(190,170,255,.36) }
   .btn.ghost:hover{ filter:brightness(1.12) }
@@ -129,64 +105,50 @@
   .tag{ padding:6px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.22);
         background:rgba(255,255,255,.06); color:#fff; font-weight:700 }
 
-  @media (max-width:720px){
-    .grid{ grid-template-columns:1fr }
+  @media (max-width:700px){
+    .grid{ grid-template-columns: 1fr }
     .label{ border-bottom:none }
     .value{ border-top:1px solid rgba(255,255,255,.06) }
-  }
-  @media print{
-    body{ background:#fff; color:#000 }
-    .scene{ display:none }
-    .card{ box-shadow:none; border:1px solid #ddd; backdrop-filter:none }
-    .btn, .actions{ display:none !important }
   }
 </style>
 </head>
 <body>
 
-<!-- خلفية رقمية مستقبلية -->
+<!-- decorative glass background -->
 <div class="scene" aria-hidden="true">
-  <div class="gridlines"></div>
-  <div class="glow g1"></div>
-  <div class="glow g2"></div>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="ring"></div>
+  <div class="chip"></div>
 </div>
 
 <div class="wrap">
-  <div class="card">
-    <div class="edge" aria-hidden="true"></div>
+  <div class="card" role="region" aria-label="Thank you summary">
+    <div class="edge"></div>
 
     <header class="header">
       <img class="logo" src="https://drive.google.com/uc?id=1RMiZhmDaciD0QDxIMMrHRTYXHP5UK5Pl" alt="Alhijrah Logo" />
       <h1 class="title">تم استلام طلبك بنجاح ✅</h1>
       <p class="subtitle">Career Gate – Alhijrah Services</p>
       <p class="lead">
-        شكرًا لتعبئة نموذج التوظيف. سيقوم فريقنا بمراجعة بياناتك والتواصل معك بالخطوات التالية.
+        شكرًا لتعبئة نموذج التوظيف. فريقنا سيتواصل معك قريبًا لاستكمال الإجراءات.
         <br/>Thank you for your submission. Our team will contact you shortly.
       </p>
     </header>
 
-    <!-- الحالة -->
+    <!-- Status -->
     <p class="status">
       Application Status | حالة الطلب:
-      <span class="pill ok">{applicationStatus}</span>
+      <span class="pill">{applicationStatus}</span>
     </p>
 
-    <!-- رقم الحالة التعريفي -->
+    <!-- Case Number (uses your Unique ID with Career- prefix) -->
     <p class="case">
-      <span class="meta">
-        <span class="pill id">Case: {uniqueId}</span>
-        <span class="pill" title="Jotform Submission ID">Submission: {submissionID}</span>
-      </span>
+      Case Number:
+      <span class="pill">{uniqueId}</span>
     </p>
 
-    <!-- شريط الخطوة التالية (نصوص عامة ذكية تلائم جميع الحالات بدون JS) -->
-    <div class="next" role="note" aria-label="Next Steps">
-      <h3>الخطوة التالية | Next Steps</h3>
-      <p>سيتم مراجعة طلبك والتحقق من المستندات وإبلاغك بأي متطلبات إضافية. في حال احتجنا معلومات أخرى سنراسلك عبر البريد أو الواتساب.</p>
-      <p>يمكنك تتبّع حالة الطلب باستخدام زر <strong>Track My Case</strong> أو تعديل بياناتك عبر <strong>Edit Submission</strong>.</p>
-    </div>
-
-    <!-- الملخص -->
+    <!-- Summary -->
     <section class="grid" aria-label="Submission Summary">
       <div class="row">
         <div class="label">Full Name | الاسم الكامل</div>
@@ -209,36 +171,42 @@
         <div class="value">{email5}</div>
       </div>
       <div class="row">
+        <div class="label">City | المدينة</div>
+        <div class="value">{address:city}</div>
+      </div>
+      <div class="row">
         <div class="label">Professional Skills | المهارات</div>
         <div class="value">{input54}</div>
       </div>
     </section>
 
-    <!-- الأزرار -->
-    <nav class="actions" aria-label="Actions">
+    <!-- Actions -->
+    <nav class="actions" role="group" aria-label="Actions">
       <a class="btn" href="{pdf-link}" target="_blank" rel="noopener">تحميل PDF | Download PDF</a>
       <a class="btn alt" href="{edit_link}" target="_blank" rel="noopener">تعديل الطلب | Edit Submission</a>
       <a class="btn ghost" href="https://alhijrahvisa.com/track?case={uniqueId}" target="_blank" rel="noopener">تتبّع طلبي | Track My Case</a>
       <a class="btn ghost"
-         href="https://wa.me/13139194292?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%82%D9%85%D8%AA%D9%8F%20%D8%A8%D8%AA%D9%82%D8%AF%D9%8A%D9%85%20%D9%86%D9%85%D9%88%D8%B0%D8%AC%20%D8%A7%D9%84%D8%AA%D9%88%D8%B8%D9%8A%D9%81.%0A%0A*Case%20Number:%20{uniqueId}%0A*Submission%20ID:%20{submissionID}%0A*Name:%20{fullName4}%0A*Phone:%20{input45}%0A*Email:%20{email5}%0A*Status:%20{applicationStatus}%0A*PDF:*%20{pdf-link}"
+         href="https://wa.me/13139194292?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%82%D9%85%D8%AA%D9%8F%20%D8%A8%D8%AA%D9%82%D8%AF%D9%8A%D9%85%20%D9%86%D9%85%D9%88%D8%B0%D8%AC%20%D8%A7%D9%84%D8%AA%D9%88%D8%B8%D9%8A%D9%81.%0A%0A*Case%20Number:%20{uniqueId}%0A*Name:%20{fullName4}%0A*Phone:%20{input45}%0A*Email:%20{email5}%0A*Status:%20{applicationStatus}%0A*PDF:%20{pdf-link}"
          target="_blank" rel="noopener">
         إرسال عبر WhatsApp
       </a>
     </nav>
 
     <footer class="footer">
-      <div>تصميم هندسي زجاجي فاخر — تجربة رقمية شفافة، ذكية، واحترافية.</div>
+      <div>تصميم هندسي زجاجي فاخر — تجربة رقمية شفافة، احترافية، وراقية.</div>
       <div class="contacts">
         <span class="tag">📞 +1 313-919-4292</span>
         <span class="tag">📧 jobs@alhijrahservices.com</span>
         <span class="tag">🌐 Alhijrahvisa.com</span>
       </div>
-      <div style="margin-top:8px">Career Gate powered by <strong>Alhijrah Services</strong></div>
+      <div style="margin-top:8px">
+        Career Gate powered by <strong>Alhijrah Services</strong> • Submission ID: {id}
+      </div>
     </footer>
   </div>
 </div>
 
-<!-- خط مساعدة بالإنجليزية (اختياري) -->
+<!-- optional tiny English footer -->
 <div style="direction:ltr; text-align:center; margin-top:12px; opacity:.55; font:12px/1.7 system-ui">
   Need help? Email <a href="mailto:jobs@alhijrahservices.com">jobs@alhijrahservices.com</a>
 </div>
