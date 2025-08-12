@@ -1,138 +1,654 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مرحبًا بكم في Career Gate</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Cairo', sans-serif;
-      background: radial-gradient(circle at top left, #0d1c2f, #010f1a);
-      color: #ffffff;
-      overflow-x: hidden;
-    }
-    header {
-      text-align: center;
-      padding: 80px 20px 40px;
-    }
-    header h1 {
-      font-size: 3rem;
-      background: linear-gradient(90deg, #ffaa00, #ffdd55);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 5px #ffaa00; }
-      to { text-shadow: 0 0 20px #ffaa00; }
-    }
-    .intro {
-      max-width: 800px;
-      margin: auto;
-      text-align: center;
-      padding: 20px;
-      font-size: 1.3rem;
-      line-height: 2;
-      color: #e0e0e0;
-    }
-    .button-group {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 40px;
-    }
-    .btn {
-      background: linear-gradient(135deg, #ffaa00, #ffcc33);
-      color: #121212;
-      padding: 15px 30px;
-      border-radius: 15px;
-      font-size: 1.2rem;
-      text-decoration: none;
-      box-shadow: 0 0 15px #ffaa00a2;
-      transition: 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .btn:hover {
-      background: linear-gradient(135deg, #ffcc33, #ffaa00);
-      box-shadow: 0 0 25px #ffaa00cc;
-      transform: scale(1.05);
-    }
-    .btn i {
-      font-size: 1.3rem;
-    }
-    .icons-floating {
-      position: fixed;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      z-index: 999;
-    }
-    .icons-floating a {
-      background: rgba(255, 165, 0, 0.1);
-      color: #ffaa00;
-      padding: 14px;
-      border-radius: 50%;
-      font-size: 1.4rem;
-      box-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
-      transition: 0.3s;
-    }
-    .icons-floating a:hover {
-      background: rgba(255, 165, 0, 0.2);
-      box-shadow: 0 0 25px #ffaa00;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ROYAL CORE PORTAL | مكتب الهجرة</title>
+
+<!-- Fonts + Tailwind -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Three.js + Vanta -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+
+<!-- Swiper (guarded init) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+<script defer src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+<!-- Leaflet + Clusters + Heatmap -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+<script defer src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script defer src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:'Cairo',sans-serif;background:#0a1e4d;color:#facc15;overflow-x:hidden}
+  #vanta-bg{position:fixed;inset:0;z-index:-1}
+
+  .glass{backdrop-filter:blur(30px) saturate(180%);background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.25);border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.4),0 0 25px rgba(250,204,21,.2)}
+  .glow-text{background:linear-gradient(to right,#facc15,#30e0b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    text-shadow:0 0 15px #facc15cc,0 0 25px #30e0b0cc}
+  .btn-vip{background:linear-gradient(90deg,#facc15,#30e0b0);color:#0a1e4d;padding:.75rem 1.2rem;border-radius:14px;font-weight:900;
+    box-shadow:0 0 24px #facc15aa;transition:transform .15s}
+  .btn-vip:hover{transform:translateY(-1px);box-shadow:0 0 40px #30e0b0cc}
+
+  /* Intro gate */
+  #cinematic-gate{position:fixed;inset:0;background:
+    radial-gradient(circle at center,#facc15cc 0%,transparent 80%),
+    radial-gradient(circle at center,transparent 70%,#0a1e4d 90%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000}
+  #cinematic-gate h1{font-size:3.1rem;font-weight:900;text-align:center;
+    text-shadow:0 0 10px #facc15aa,0 0 20px #facc15cc,0 0 40px #facc15ee;margin:0 1rem .2rem}
+  #cinematic-gate p{font-size:1.1rem;margin-bottom:1.1rem;color:#facc15cc;text-align:center}
+  .handwrite-text{border-right:3px solid #facc15;white-space:nowrap;overflow:hidden;width:28ch;
+    animation:typing 3s steps(28) forwards,blink .75s step-end infinite}
+  @keyframes typing{from{width:0}to{width:28ch}}@keyframes blink{50%{border-color:transparent}100%{border-color:#facc15}}
+
+  /* VIP Client Card */
+  .vip-card{position:relative;overflow:hidden}
+  .vip-card::before{content:"";position:absolute;inset:-2px;background:conic-gradient(from 180deg,#ffef9f,#30e0b0,#ffef9f);
+    filter:blur(10px);opacity:.35;z-index:0}
+  .vip-inner{position:relative;z-index:1}
+  .vip-badge{background:linear-gradient(90deg,#facc15,#30e0b0);color:#0a1e4d;font-weight:900;border-radius:9999px;padding:.25rem .8rem;display:inline-flex;gap:.4rem;align-items:center}
+
+  /* Map */
+  #wh-map{width:90vw;max-width:1200px;height:520px;margin:1rem auto;border-radius:20px;box-shadow:0 0 40px #facc150a inset}
+  .marker-gold{background:radial-gradient(circle,#fff5b3 0%,#ffd84d 60%,#facc15 100%);border:2px solid #b38f00;border-radius:50%;width:18px;height:18px}
+  .marker-gold-shadow{filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+  .pulse{position:relative}
+  .pulse::after{content:"";position:absolute;left:-6px;top:-6px;width:30px;height:30px;border:2px solid #30e0b0;border-radius:50%;
+    animation:pulse 1.5s ease-out infinite;opacity:.7}
+  @keyframes pulse{0%{transform:scale(.4);opacity:.8}100%{transform:scale(1.35);opacity:0}}
+  .marker-cluster-small{background:#facc15;color:#0a1e4d;border:2px solid #b38f00}
+  .marker-cluster-medium{background:#ffd84d;color:#0a1e4d;border:2px solid #b38f00}
+  .marker-cluster-large{background:#ffe680;color:#0a1e4d;border:2px solid #b38f00}
+
+  /* Skeleton loaders */
+  .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.22),rgba(255,255,255,.08));background-size:200% 100%;animation:skeleton 1.2s infinite}
+  @keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  /* Controls row wrap on small */
+  .controls-wrap{display:grid;grid-template-columns:1fr;gap:.5rem}
+  @media (min-width: 900px){ .controls-wrap{grid-template-columns:1fr auto auto auto auto}}
+</style>
 </head>
 <body>
-  <div class="icons-floating">
-    <a href="https://wa.me/13139194292" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    <a href="mailto:Jobs@alhijrahservices.com" title="Email"><i class="fas fa-envelope"></i></a>
-    <a href="#" title="Chat"><i class="fas fa-comments"></i></a>
-  </div>  <header>
-    <h1>بوابة التوظيف الذكية – مكتب الهجرة</h1>
-  </header>  <section class="intro">
-    <p>
-      مرحبًا بكم في منصتكم الذكية <strong style="color:#ffaa00">Career Gate</strong>،<br>
-      حيث نُقدّم تجربة توظيف مبتكرة تعتمد على الذكاء الاصطناعي والتقنيات التفاعلية الحديثة.<br>
-      نربطك بأفضل الفرص في كبرى الشركات مثل Amazon بطريقة ذكية، آمنة، وسلسة.
-    </p><div class="button-group">
-  <a href="https://form.jotform.com/AlhijrahServices/CareerGate" target="_blank" class="btn"><i class="fas fa-edit"></i> قدم طلبك الآن</a>
-  <a href="https://alhijrahvisa.com" target="_blank" class="btn"><i class="fas fa-globe"></i> الموقع الرسمي</a>
+<div id="vanta-bg" aria-hidden="true"></div>
+
+<!-- Intro -->
+<div id="cinematic-gate">
+  <h1 class="handwrite-text">مرحباً بكم في مكتب الهجرة للاستشارات</h1>
+  <p>قسم خدمات الجرين كارد – بطاقة الإقامة الدائمة في أمريكا</p>
+  <button class="btn-vip" onclick="startExperience()">ابدأ الآن</button>
 </div>
 
+<!-- Social -->
+<div class="fixed top-1/2 -translate-y-1/2 right-4 z-[10001] flex flex-col gap-3">
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://www.instagram.com/alhijrahservices/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://tiktok.com/@alhijrahusa" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://www.facebook.com/share/1A5jeLiNyz/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://whatsapp.com/channel/0029Vb4RbVhBvvsa7100Ls2E" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+
+<!-- Main -->
+<main id="main" class="p-6 max-w-screen-xl mx-auto hidden">
+  <!-- Hero -->
+  <section class="glass p-8 my-10 rounded-xl text-center">
+    <h2 class="text-4xl font-extrabold mb-2 glow-text">بوابة خدمات الهجرة الرقمية</h2>
+    <p class="text-lg mb-2 text-white/90">ذكية • حديثة • تجربة VIP</p>
   </section>
-<script src='https://cdn.jotfor.ms/s/umd/latest/for-embedded-agent.js'></script>
+
+  <!-- Apply (Jotform) + Smart Client Card -->
+  <section class="my-10">
+    <h3 class="text-3xl font-bold mb-6 glow-text text-center">📝 قدّم طلبك الآن</h3>
+    <div class="glass p-4 rounded-xl max-w-3xl mx-auto">
+      <iframe id="jf" title="ALHIJRAH Career Gate" src="https://form.jotform.com/AlhijrahServices/CareerGate" style="width:100%;height:900px;border:0;border-radius:14px" loading="lazy"></iframe>
+      <p class="text-center text-white/80 mt-3 text-sm">عند الإرسال، ستظهر بطاقتك الذكية في الأسفل تلقائيًا.</p>
+    </div>
+
+    <!-- Client Card -->
+    <div id="clientCard" class="vip-card glass mt-6 p-[2px] rounded-2xl max-w-3xl mx-auto hidden">
+      <div class="vip-inner rounded-2xl p-6">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <div class="vip-badge"><i class="fa-solid fa-id-card-clip"></i>&nbsp; Client Card</div>
+          <div class="text-white/80 text-sm" id="cc-updated">—</div>
+        </div>
+        <div id="cc-skel" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <div class="h-7 w-52 rounded skeleton mb-2"></div>
+            <div class="h-5 w-48 rounded skeleton mb-2"></div>
+            <div class="h-5 w-40 rounded skeleton"></div>
+          </div>
+          <div>
+            <div class="h-5 w-60 rounded skeleton mb-2"></div>
+            <div class="h-5 w-44 rounded skeleton"></div>
+          </div>
+        </div>
+        <div id="cc-real" class="grid md:grid-cols-2 gap-5 hidden">
+          <div>
+            <div class="text-2xl font-extrabold text-white" id="cc-name">—</div>
+            <div class="text-white/80 mt-1" id="cc-case">🆔 —</div>
+            <div class="text-white/80 mt-1" id="cc-status">📊 —</div>
+            <div class="text-white/80 mt-1" id="cc-position">🎯 —</div>
+          </div>
+          <div class="text-white/90">
+            <div id="cc-contact">📧 — | 📱 —</div>
+            <div class="mt-1" id="cc-location">📍 —</div>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button id="cc-share" class="btn-vip flex-1"><i class="fa-brands fa-whatsapp"></i>&nbsp; مشاركة</button>
+          <a id="cc-edit" class="btn-vip flex-1 text-center" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square"></i>&nbsp; تعديل</a>
+          <button id="cc-copy" class="btn-vip flex-1"><i class="fa-solid fa-link"></i>&nbsp; نسخ الرابط</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Track -->
+  <section class="my-10">
+    <h3 class="text-3xl font-bold mb-6 glow-text text-center">📌 متابعة حالة الطلب</h3>
+    <div class="glass p-6 rounded-xl max-w-3xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-3 items-end">
+        <div>
+          <label class="block mb-1 text-white/90">طريقة البحث</label>
+          <select id="trackBy" class="w-full rounded-lg p-3 text-slate-900">
+            <option value="email">البريد الإلكتروني</option>
+            <option value="phone">رقم الجوال</option>
+            <option value="case">رقم القضية</option>
+            <option value="submission">رقم الإرسال</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block mb-1 text-white/90">القيمة</label>
+          <input id="trackKey" type="text" class="w-full rounded-lg p-3 text-slate-900" placeholder="example@mail.com أو +1313..." />
+        </div>
+      </div>
+      <div class="flex gap-3 mt-3">
+        <button id="btnTrack" class="btn-vip flex-1"><i class="fa-solid fa-magnifying-glass"></i>&nbsp; ابحث</button>
+      </div>
+      <div id="trackResult" class="mt-4 bg-white/10 rounded-xl p-4 text-white/95 min-h-[88px]" aria-live="polite">سيظهر هنا الملخص.</div>
+    </div>
+  </section>
+
+  <!-- Amazon Warehouses (Modern Map) -->
+  <section class="my-12">
+    <h3 class="text-3xl font-bold mb-1 glow-text text-center">مراكز أمازون – الولايات المتحدة</h3>
+    <p class="text-center text-white/80 mb-4 text-sm">بحث سريع • طبقات عرض • أقرب موقع • Heatmap</p>
+
+    <div class="glass p-4 rounded-2xl max-w-6xl mx-auto mb-3">
+      <div class="controls-wrap">
+        <input id="awsq" class="rounded-lg p-3 text-slate-900" placeholder="ابحث بالكود/المدينة/الولاية (JFK8, Detroit, MI)"/>
+        <select id="stateFilter" class="rounded-lg p-3 text-slate-900">
+          <option value="">كل الولايات</option>
+        </select>
+        <button class="btn-vip" onclick="searchAmazon()">بحث</button>
+        <button class="btn-vip" onclick="resetAmazon()">إعادة ضبط</button>
+        <button class="btn-vip" onclick="locateMe()"><i class="fa-solid fa-location-crosshairs"></i>&nbsp; الأقرب لي</button>
+      </div>
+
+      <!-- Pro controls -->
+      <div class="mt-3 flex flex-col md:flex-row gap-3 items-center">
+        <label class="text-white/90 text-sm">نطاق بالقرب مني (ميل):</label>
+        <input id="radiusMiles" type="range" min="5" max="200" step="5" value="50" oninput="updateRadiusLabel(this.value)"/>
+        <span id="radiusLabel" class="text-white/80 text-sm">50 mi</span>
+        <label class="ml-auto flex items-center gap-2 text-white/90 text-sm">
+          <input id="toggleHeat" type="checkbox" onchange="toggleHeatmap(this.checked)"/> عرض Heatmap
+        </label>
+      </div>
+
+      <div id="nearestList" class="grid md:grid-cols-2 gap-3 mt-3"></div>
+    </div>
+
+    <div id="wh-map" role="region" aria-label="خريطة مراكز أمازون"></div>
+    <p class="text-center text-white/60 text-xs mt-2">
+      الخرائط: © OpenStreetMap contributors • خرائط صور الأقمار الصناعية: © Esri • لأداء أفضل تم تمكين التجميع والـHeatmap
+    </p>
+  </section>
+</main>
+
+<!-- Assistant -->
+<button id="botToggle" class="btn-vip fixed bottom-6 left-6 w-14 h-14 rounded-full flex items-center justify-center text-xl">🤖</button>
+<div id="bot" class="glass hidden fixed bottom-24 left-6 w-[320px] max-height-[420px] rounded-2xl p-4 overflow-y-auto">
+  <div class="text-slate-900 font-bold rounded-md text-center py-1 mb-2" style="background:linear-gradient(90deg,#facc15,#30e0b0)">مساعد الهجرة الرقمي</div>
+  <div id="msgs" class="space-y-2 max-h-[260px] overflow-y-auto"></div>
+  <div class="flex gap-2 mt-2">
+    <input id="msgIn" class="flex-1 rounded-lg p-2 text-slate-900" placeholder="اكتب سؤالك..."/>
+    <button class="btn-vip" onclick="sendMsg()">إرسال</button>
+  </div>
+</div>
+
 <script>
-  window.addEventListener("DOMContentLoaded", function() {
-    window.AgentInitializer.init({
-      agentRenderURL: "https://agent.jotform.com/0195ab7c4d817624b1f675e053154b361025",
-      rootId: "JotformAgent-0195ab7c4d817624b1f675e053154b361025",
-      formID: "0195ab7c4d817624b1f675e053154b361025",
-      queryParams: ["skipWelcome=1", "maximizable=1"],
-      domain: "https://www.jotform.com",
-      isDraggable: false,
-      background: "linear-gradient(180deg, #6C73A8 0%, #6C73A8 100%)",
-      buttonBackgroundColor: "#0066C3",
-      buttonIconColor: "#FFFFFF",
-      variant: false,
-      customizations: {
-        "greeting": "Yes",
-        "greetingMessage": "مرحبًا! كيف يمكنني مساعدتك؟",
-        "openByDefault": "No",
-        "pulse": "Yes",
-        "position": "right",
-        "autoOpenChatIn": "0"
-      },
-      isVoice: undefined
-    });
+/* ===== CONFIG ===== */
+const webAppUrl = "https://script.google.com/macros/s/AKfycbyvP5-ZOleoCQSHvXXzp_3V4olSuVDTdloU0oyW1IsDzjMYCNwNISuYn31LOsN8hBCW6Q/exec"; // LIVE /exec
+const AMAZON_GEOJSON_URL = "";   // optional: host full list at GitHub (GeoJSON/JSON)
+const DATA_VERSION = "v1.3";     // bump to refresh local cache
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.VANTA && window.THREE){
+    VANTA.NET({ el:"#vanta-bg", mouseControls:true, touchControls:true,
+      color:0xfacc15, backgroundColor:0x0a1e4d, points:20, maxDistance:25, spacing:18 });
+  }
+  if (document.querySelector(".swiper")) {
+    new Swiper(".swiper",{ effect:"coverflow", grabCursor:true, centeredSlides:true, slidesPerView:"auto", loop:true,
+      coverflowEffect:{rotate:30, stretch:0, depth:150, modifier:1, slideShadows:true},
+      pagination:{ el:".swiper-pagination", clickable:true },
+      navigation:{ nextEl:".swiper-button-next", prevEl:".swiper-button-prev" } });
+  }
+
+  // Assistant
+  document.getElementById('botToggle').onclick = () => {
+    const x=document.getElementById('bot'); x.classList.toggle('hidden');
+    if(!x.classList.contains('hidden')) document.getElementById('msgIn').focus();
+  };
+
+  // Tracking
+  document.getElementById("btnTrack").addEventListener("click", trackSearch);
+  document.getElementById("trackKey").addEventListener("keydown", e=>{ if(e.key==="Enter") trackSearch(); });
+
+  // Jotform → Client Card
+  listenJotformSubmission();   // secondary path
+  prefillCardFromURL();        // primary, instant path after redirect
+
+  // Lazy-init map when visible
+  const mapEl = document.getElementById('wh-map');
+  const obs = new IntersectionObserver((entries)=>{
+    if(entries.some(e=>e.isIntersecting)){ initAmazonMap(); obs.disconnect(); }
+  }, {rootMargin:"200px"});
+  obs.observe(mapEl);
+
+  // Restore last search
+  restoreLastSearch();
+});
+
+/* ===== Intro ===== */
+function startExperience(){
+  const gate=document.getElementById("cinematic-gate");
+  gate.style.transition="opacity 1.2s ease"; gate.style.opacity=0;
+  setTimeout(()=>{ gate.style.display="none"; const m=document.getElementById("main"); m.style.display="block"; m.style.opacity=0; setTimeout(()=>{m.style.transition="opacity .9s"; m.style.opacity=1;},10); },1200);
+}
+
+/* ===== Utils ===== */
+const normDigits = s=>String(s||"").replace(/[٠-٩]/g,d=>String.fromCharCode(d.charCodeAt(0)-1632)).replace(/[۰-۹]/g,d=>String.fromCharCode(d.charCodeAt(0)-1776));
+const isEmail = s=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+const isPhone = s=>/^\+?\d{7,15}$/.test(s);
+const hav = (lat1,lon1,lat2,lon2)=>{ const R=6371,to=deg=>deg*Math.PI/180; const dLat=to(lat2-lat1),dLon=to(lon2-lon1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(to(lat1))*Math.cos(to(lat2))*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(a)); };
+
+/* ===== Track Search ===== */
+async function trackSearch(){
+  const bySel=document.getElementById("trackBy").value;
+  let key=normDigits(document.getElementById("trackKey").value.trim());
+  const res=document.getElementById("trackResult");
+  if(!key){ res.textContent="⚠ يرجى إدخال قيمة."; return; }
+  if(bySel==="email" && !isEmail(key)){ res.textContent="⚠ بريد غير صحيح."; return; }
+  if(bySel==="phone"){ key=key.replace(/[^\d+]/g,""); if(!isPhone(key)){ res.textContent="⚠ رقم غير صحيح."; return; } }
+  res.textContent="⏳ جارِ البحث...";
+  try{
+    const r=await fetch(`${webAppUrl}?by=${encodeURIComponent(bySel)}&key=${encodeURIComponent(key)}`,{headers:{Accept:"application/json"},cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const d=await r.json();
+    if(d.error){ res.textContent="❌ "+d.error; return; }
+    res.innerHTML = renderSummary(d);
+    localStorage.setItem("alh_last_search", JSON.stringify({by:bySel,key,d,t:Date.now()}));
+  }catch(err){ res.textContent="⚠ خطأ: "+(err.message||""); }
+}
+function renderSummary(d){
+  const caseNo=d.caseNumber||d.caseId||"—";
+  const fullName=d.fullName||((d.firstName||"")+" "+(d.lastName||"")).trim()||"—";
+  const city=d.address?.city||d.city||"—";
+  const pos=d.position||d.workType||"—";
+  const st=d.applicationStatus||d.status||"—";
+  const up=d.meta?.lastUpdateDate||d.updatedAt||"—";
+  return [
+    `🆔 <b>رقم القضية:</b> ${caseNo}`,
+    `👤 <b>الاسم:</b> ${fullName}`,
+    `📧 <b>البريد:</b> ${d.email||"—"} &nbsp; | &nbsp; 📱 <b>الجوال:</b> ${d.phone||"—"}`,
+    `📍 <b>المدينة:</b> ${city} &nbsp; | &nbsp; 🎯 <b>الوظيفة:</b> ${pos}`,
+    `📊 <b>الحالة:</b> ${st}`,
+    `🕒 <b>آخر تحديث:</b> ${up}`
+  ].join("<br/>");
+}
+function restoreLastSearch(){
+  try{
+    const x=JSON.parse(localStorage.getItem("alh_last_search")||"null");
+    if(!x) return;
+    document.getElementById("trackBy").value = x.by;
+    document.getElementById("trackKey").value = x.key;
+    document.getElementById("trackResult").innerHTML = renderSummary(x.d);
+  }catch(_){}
+}
+
+/* ===== Client Card (Primary: URL tokens; Secondary: postMessage) ===== */
+
+/* PRIMARY: show card from URL tokens after Thank-You redirect. */
+function prefillCardFromURL(){
+  const p = new URLSearchParams(location.search);
+
+  const submissionID = p.get("submissionID") || p.get("sid") || "";
+  const uniqueId     = p.get("uniqueId")     || p.get("case") || "";
+  const fullName     = (p.get("fullName4") || "").trim();
+  const phone        = (p.get("input45")   || "").trim();
+  const email        = (p.get("email5")    || "").trim();
+  const city         = (p.get("city")      || "").trim();
+  const status       = (p.get("applicationStatus") || p.get("status") || "Submitted").trim();
+  const editLink     = p.get("edit_link") || "";
+
+  if(!submissionID && !fullName && !phone && !email && !uniqueId) return;
+
+  showCardSkeleton();
+
+  // Instant card from URL
+  const instant = {
+    caseId: uniqueId || "", caseNumber: uniqueId || "",
+    fullName, phone, email, applicationStatus: status,
+    address: { city },
+    meta: { editUrl: editLink, lastUpdateDate: new Date().toLocaleString() }
+  };
+  fillCard(instant);
+
+  // Enrich via Apps Script (latest merged data)
+  if (submissionID) {
+    fetch(`${webAppUrl}?by=submission&key=${encodeURIComponent(submissionID)}`, {headers:{Accept:"application/json"},cache:"no-store"})
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if(d && !d.error) fillCard(d); })
+      .catch(()=>{/* keep instant */});
+  }
+
+  // Scroll if anchored
+  if (location.hash === "#card") {
+    const box = document.getElementById("clientCard");
+    if (box) box.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+}
+
+/* SECONDARY: still listen for postMessage from the embedded Jotform. */
+function listenJotformSubmission(){
+  const jf = document.getElementById('jf');
+  if (!jf) return;
+
+  window.addEventListener("message",(event)=>{
+    let host = "";
+    try{ host = new URL(event.origin).hostname || ""; }catch(_){}
+    if(!/(^|\.)jotform\.(com|io)$/i.test(host)) return;
+
+    let payload = event.data;
+    try { if (typeof payload === "string") payload = JSON.parse(payload); } catch(_){}
+    const s = (payload && (payload.action || payload.event || payload.type || "") + "").toLowerCase();
+
+    if (s === "submission-completed" || s.includes("submission") || s.includes("form:submit:success")) {
+      const sid = payload?.submissionID || payload?.submissionId || payload?.data?.submissionID;
+      showCardSkeleton();
+      if(sid){
+        fetch(`${webAppUrl}?by=submission&key=${encodeURIComponent(sid)}`, {headers:{Accept:"application/json"},cache:"no-store"})
+          .then(r=>r.json()).then(d=>fillCard(d)).catch(()=>fillCard(null,"تعذر جلب البيانات"));
+      } else {
+        fillCard(null,"لم يصل رقم الإرسال من Jotform.");
+      }
+    }
   });
+}
+
+function showCardSkeleton(){
+  const box=document.getElementById("clientCard");
+  box.classList.remove("hidden");
+  document.getElementById("cc-skel").classList.remove("hidden");
+  document.getElementById("cc-real").classList.add("hidden");
+  document.getElementById("cc-updated").textContent="—";
+}
+function fillCard(d, err){
+  const box=document.getElementById("clientCard");
+  box.classList.remove("hidden");
+  const real=document.getElementById("cc-real");
+  const skel=document.getElementById("cc-skel");
+
+  if(err){
+    document.getElementById("cc-name").textContent="تعذر عرض البطاقة";
+    document.getElementById("cc-case").textContent="❌ "+err;
+    skel.classList.add("hidden"); real.classList.remove("hidden");
+    return;
+  }
+
+  const fullName=d?.fullName||((d?.firstName||"")+" "+(d?.lastName||"")).trim()||"—";
+  document.getElementById("cc-name").textContent = fullName;
+  document.getElementById("cc-case").textContent = "🆔 " + (d?.caseNumber||d?.caseId||"—");
+  document.getElementById("cc-status").textContent = "📊 " + (d?.applicationStatus||d?.status||"—");
+  document.getElementById("cc-position").textContent = "🎯 " + (d?.position||d?.workType||"—");
+  document.getElementById("cc-contact").textContent = `📧 ${d?.email||"—"}  |  📱 ${d?.phone||"—"}`;
+  document.getElementById("cc-location").textContent = `📍 ${d?.address?.city||d?.city||"—"}`;
+  document.getElementById("cc-updated").textContent = d?.meta?.lastUpdateDate||d?.updatedAt||new Date().toLocaleString();
+
+  document.getElementById("cc-edit").href = d?.meta?.editUrl || "#";
+  document.getElementById("cc-share").onclick = ()=>{
+    const text=[
+      "ALHIJRAH – Client Card",
+      `الاسم: ${fullName}`,
+      `القضية: ${d?.caseNumber||d?.caseId||"—"}`,
+      `الحالة: ${d?.applicationStatus||d?.status||"—"}`,
+      `الوظيفة: ${d?.position||d?.workType||"—"}`,
+      `المدينة: ${d?.address?.city||d?.city||"—"}`,
+      `البريد: ${d?.email||"—"} | الجوال: ${d?.phone||"—"}`
+    ].join("\n");
+    window.open("https://wa.me/13139194292?text="+encodeURIComponent(text), "_blank");
+  };
+  document.getElementById("cc-copy").onclick = ()=>{
+    const url = location.origin+location.pathname+"#card";
+    navigator.clipboard.writeText(url).then(()=>alert("تم نسخ رابط البطاقة"));
+  };
+
+  try{ localStorage.setItem("alh_last_card", JSON.stringify({d,t:Date.now()})); }catch(_){}
+  skel.classList.add("hidden"); real.classList.remove("hidden");
+  box.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+/* ===== Amazon Map (Smarter / Future look) ===== */
+let whMap, cluster, heatLayer, userCircle=null, allWH=[], idxToMarker=[], statesSet=new Set();
+let currentUser = null;
+
+function initAmazonMap(){
+  const dark = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:'&copy; OpenStreetMap & CARTO'});
+  const light= L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{attribution:'&copy; OpenStreetMap & CARTO'});
+  const sat  = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{attribution:'Tiles &copy; Esri'});
+
+  whMap = L.map("wh-map",{ scrollWheelZoom:true, layers:[dark] }).setView([39.5,-98.35],4);
+
+  const baseLayers = {"داكن": dark, "فاتح": light, "قمر صناعي": sat};
+  const overlayLayers = {};
+  const ctl = L.control.layers(baseLayers, overlayLayers, {collapsed:true}).addTo(whMap);
+
+  cluster = L.markerClusterGroup({ chunkedLoading:true, maxClusterRadius: 60, spiderfyOnMaxZoom: true });
+  whMap.addLayer(cluster);
+
+  heatLayer = L.heatLayer([], {radius: 25, blur: 18, maxZoom: 10});
+  overlayLayers["Heatmap"] = heatLayer;
+  ctl.addOverlay(heatLayer, "Heatmap");
+
+  loadWH();
+}
+
+async function loadWH(){
+  const key="alh_wh_cache_"+DATA_VERSION;
+  try{
+    const cached=JSON.parse(localStorage.getItem(key)||"null");
+    if(cached?.list?.length){ allWH=cached.list; finalizeWH(); return; }
+  }catch(_){}
+
+  if(AMAZON_GEOJSON_URL){
+    try{
+      const r=await fetch(AMAZON_GEOJSON_URL,{cache:"no-store"}); if(r.ok){
+        const j=await r.json();
+        if(Array.isArray(j)) allWH=j;
+        else if(j?.features){ allWH=j.features.map(f=>({code:f.properties?.code||"",city:f.properties?.city||"",state:f.properties?.state||"",address:f.properties?.address||"",lat:f.geometry?.coordinates?.[1],lon:f.geometry?.coordinates?.[0]})); }
+      }
+    }catch(_){}
+  }
+  if(!allWH.length){ allWH = defaultWH(); }
+  finalizeWH();
+  try{ localStorage.setItem(key, JSON.stringify({list:allWH, t:Date.now()})); }catch(_){}
+}
+
+function finalizeWH(){
+  plotWH(allWH); buildStateFilter();
+  const pts = allWH.filter(p=>typeof p.lat==="number"&&typeof p.lon==="number").map(p=>[p.lat,p.lon,0.5]);
+  heatLayer.setLatLngs(pts);
+}
+
+function plotWH(list){
+  cluster.clearLayers(); idxToMarker=[]; statesSet.clear();
+  list.forEach((p,i)=>{
+    if(typeof p.lat!=="number"||typeof p.lon!=="number") return;
+    statesSet.add(p.state||"");
+    const icon=L.divIcon({className:"marker-gold-shadow", html:'<div class="marker-gold"></div>', iconSize:[18,18]});
+    const m=L.marker([p.lat,p.lon],{icon})
+      .bindPopup(`<b>${p.code||""}</b><br>${p.city||""}, ${p.state||""}<br><small>${p.address||""}</small>`);
+    cluster.addLayer(m); idxToMarker[i]=m;
+  });
+  if(list.length){ try{ whMap.fitBounds(cluster.getBounds(), {padding:[20,20]}); }catch(_){} }
+}
+
+function buildStateFilter(){
+  const sel=document.getElementById("stateFilter");
+  const items=[...statesSet].filter(Boolean).sort();
+  items.forEach(s=>{ const opt=document.createElement("option"); opt.value=s; opt.textContent=s; sel.appendChild(opt); });
+}
+
+function searchAmazon(){
+  const q=(document.getElementById("awsq").value||"").trim().toLowerCase();
+  const s=document.getElementById("stateFilter").value;
+  const scored = allWH
+    .map((p,i)=>({i,p,score:
+      (q? [p.code,p.city,p.state,p.address].reduce((acc,x)=>acc+(String(x||"").toLowerCase().includes(q)?1:0),0):1) *
+      (s? (p.state===s?2:0):1)
+    }))
+    .filter(x=>x.score>0)
+    .sort((a,b)=>b.score-a.score);
+
+  if(scored.length){
+    const {i,p}=scored[0]; const m=idxToMarker[i];
+    if(m){ whMap.setView(m.getLatLng(), 11); m.openPopup(); pulseMarker(m); }
+    renderNearestList(scored.slice(0,6).map(x=>x.p));
+  } else {
+    renderNearestList([]);
+  }
+}
+function resetAmazon(){
+  document.getElementById("awsq").value=""; document.getElementById("stateFilter").value="";
+  if(cluster.getLayers().length){ try{ whMap.fitBounds(cluster.getBounds(),{padding:[20,20]}); }catch(_){} }
+  renderNearestList([]);
+  clearUserCircle();
+}
+function locateMe(){
+  if(!navigator.geolocation){ alert("المتصفح لا يدعم تحديد الموقع."); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude:lat, longitude:lon}=pos.coords; currentUser = [lat,lon];
+    setUserCircle(lat,lon, milesToMeters(getRadiusMiles()));
+    whMap.setView([lat,lon], 9);
+    const nearest = allWH
+      .map(p=>({p,km:hav(lat,lon,p.lat,p.lon)}))
+      .sort((a,b)=>a.km-b.km)
+      .slice(0,6).map(x=>({...x.p, km:x.km}));
+    renderNearestList(nearest);
+  }, _=>alert("تعذر تحديد الموقع."), {enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+}
+function renderNearestList(list){
+  const box=document.getElementById("nearestList");
+  box.innerHTML="";
+  if(!list.length){ box.innerHTML='<div class="text-white/70 text-sm">لا توجد نتائج لعرضها الآن.</div>'; return; }
+  list.forEach(p=>{
+    const km = p.km? p.km.toFixed(1)+" كم" : "";
+    const div=document.createElement("div");
+    div.className="glass p-3 rounded-xl text-white/90";
+    div.innerHTML=`
+      <div class="font-bold">${p.code||""}</div>
+      <div class="text-white/80">${p.city||""}, ${p.state||""} ${km? " • "+km:""}</div>
+      <div class="text-white/70 text-sm">${p.address||""}</div>
+      <div class="mt-2 flex gap-2">
+        <button class="btn-vip" onclick="focusWH(${p.lat},${p.lon})"><i class="fa-solid fa-map-location-dot"></i>&nbsp; على الخريطة</button>
+        <a class="btn-vip" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}"><i class="fa-solid fa-route"></i>&nbsp; اتجاهات</a>
+      </div>`;
+    box.appendChild(div);
+  });
+}
+function focusWH(lat,lon){
+  const target = L.latLng(lat,lon);
+  whMap.setView(target, 11);
+  let minD=1e9, chosen=null;
+  cluster.eachLayer(m=>{
+    const d = m.getLatLng().distanceTo(target);
+    if(d<minD){ minD=d; chosen=m; }
+  });
+  if(chosen){ chosen.openPopup(); pulseMarker(chosen); }
+}
+function pulseMarker(m){
+  try{
+    const el = m.getElement();
+    if(!el) return;
+    el.classList.add('pulse');
+    setTimeout(()=>el.classList.remove('pulse'), 2000);
+  }catch(_){}
+}
+function updateRadiusLabel(v){
+  document.getElementById('radiusLabel').textContent = `${v} mi`;
+  if(currentUser && userCircle){
+    userCircle.setRadius(milesToMeters(v));
+  }
+}
+function getRadiusMiles(){ return Number(document.getElementById('radiusMiles').value||50); }
+function milesToMeters(mi){ return mi*1609.344; }
+function setUserCircle(lat,lon, r){
+  clearUserCircle();
+  userCircle = L.circle([lat,lon], {radius:r, color:'#30e0b0', fillColor:'#30e0b0', fillOpacity:0.08}).addTo(whMap);
+}
+function clearUserCircle(){ if(userCircle){ try{ whMap.removeLayer(userCircle);}catch(_){ } userCircle=null; } }
+function toggleHeatmap(on){
+  if(on){ if(!whMap.hasLayer(heatLayer)) heatLayer.addTo(whMap); }
+  else { if(whMap.hasLayer(heatLayer)) whMap.removeLayer(heatLayer); }
+}
+
+/* Default sample warehouses (tip: replace with your full list via AMAZON_GEOJSON_URL) */
+function defaultWH(){
+  return [
+    {code:"JFK8", city:"Staten Island", state:"NY", lat:40.640, lon:-74.190, address:"Amazon Staten Island"},
+    {code:"EWR4", city:"Robbinsville", state:"NJ", lat:40.214, lon:-74.618, address:"Robbinsville FC"},
+    {code:"DTW1", city:"Romulus", state:"MI", lat:42.223, lon:-83.369, address:"Romulus"},
+    {code:"DET2", city:"Shelby Twp", state:"MI", lat:42.670, lon:-83.030, address:"Shelby Township"},
+    {code:"MDW2", city:"Joliet", state:"IL", lat:41.520, lon:-88.120, address:"Joliet"},
+    {code:"IND1", city:"Whitestown", state:"IN", lat:39.933, lon:-86.345, address:"Whitestown"},
+    {code:"CVG1", city:"Hebron", state:"KY", lat:39.055, lon:-84.661, address:"Hebron (CVG)"},
+    {code:"ATL6", city:"East Point", state:"GA", lat:33.660, lon:-84.440, address:"Atlanta Area"},
+    {code:"MCO1", city:"Orlando", state:"FL", lat:28.430, lon:-81.310, address:"Orlando"},
+    {code:"TPA1", city:"Ruskin", state:"FL", lat:27.718, lon:-82.433, address:"Ruskin"},
+    {code:"DFW7", city:"Dallas/Fort Worth", state:"TX", lat:32.900, lon:-97.040, address:"DFW Area"},
+    {code:"HOU3", city:"Houston", state:"TX", lat:29.770, lon:-95.340, address:"Houston"},
+    {code:"PHX3", city:"Phoenix", state:"AZ", lat:33.440, lon:-112.210, address:"West Phoenix"},
+    {code:"LAS7", city:"North Las Vegas", state:"NV", lat:36.240, lon:-115.120, address:"North LV"},
+    {code:"ONT2", city:"San Bernardino", state:"CA", lat:34.085, lon:-117.273, address:"San Bernardino"},
+    {code:"LGB8", city:"Rialto", state:"CA", lat:34.110, lon:-117.383, address:"Rialto"},
+    {code:"OAK4", city:"Tracy", state:"CA", lat:37.740, lon:-121.420, address:"Tracy"},
+    {code:"SJC7", city:"Tracy", state:"CA", lat:37.740, lon:-121.420, address:"Tracy 2"},
+    {code:"SMF6", city:"Sacramento", state:"CA", lat:38.650, lon:-121.500, address:"Sacramento"},
+    {code:"PDX9", city:"Troutdale", state:"OR", lat:45.543, lon:-122.390, address:"Troutdale"},
+    {code:"BFI5", city:"Kent", state:"WA", lat:47.385, lon:-122.230, address:"Kent"},
+    {code:"GEG1", city:"Spokane", state:"WA", lat:47.620, lon:-117.530, address:"Spokane"}
+  ];
+}
+
+/* ===== Tiny bot mock ===== */
+function sendMsg(){
+  const m=document.getElementById('msgIn').value.trim(); if(!m) return;
+  const box=document.getElementById('msgs');
+  box.insertAdjacentHTML('beforeend', `<div class="bg-[#30e0b0] text-[#0a1e4d] rounded-xl px-3 py-2 ml-auto max-w-[75%]">${m}</div>`);
+  document.getElementById('msgIn').value="";
+  setTimeout(()=>box.insertAdjacentHTML('beforeend', `<div class="bg-[#facc15] text-[#0a1e4d] rounded-xl px-3 py-2 max-w-[75%]">شكرًا! سنعاود التواصل.</div>`), 700);
+}
 </script>
 </body>
 </html>
