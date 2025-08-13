@@ -1,328 +1,105 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>شكراً لك! | بوابة مكتب الهجرة</title>
-
-<!-- Font + Tailwind -->
+<title>شكراً لتقديمك | ROYAL CORE</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
-<!-- Vanta (optional subtle background) -->
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-
-<!-- Confetti -->
-<script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
 <style>
-  :root { --bg:#0a1e4d; --gold:#facc15; --mint:#30e0b0; }
-  html,body{margin:0;padding:0;height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--gold);overflow-x:hidden}
-  #vanta-bg{position:fixed;inset:0;z-index:-1}
-
-  .glass{backdrop-filter:blur(26px) saturate(180%);background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.2);border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.35),0 0 25px rgba(250,204,21,.18)}
-  .glow-text{background:linear-gradient(to left,var(--gold),var(--mint));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    text-shadow:0 0 14px #facc15aa,0 0 22px #30e0b0aa}
-  .btn{background:linear-gradient(90deg,var(--gold),var(--mint));color:#0a1e4d;padding:.8rem 1.1rem;border-radius:14px;font-weight:900;
-    box-shadow:0 0 22px #facc1588;transition:transform .15s}
-  .btn:hover{transform:translateY(-1px);box-shadow:0 0 38px #30e0b0cc}
-  .muted{color:rgba(255,255,255,.82)}
-  .tiny{color:rgba(255,255,255,.6);font-size:.82rem}
-
-  /* Skeleton */
-  .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.22),rgba(255,255,255,.08));background-size:220% 100%;animation:s 1.2s infinite}
-  @keyframes s{0%{background-position:220% 0}100%{background-position:-220% 0}}
-
-  /* Timeline */
-  .step-dot{width:12px;height:12px;border-radius:50%;display:inline-block}
-  .step-line{height:3px;flex:1;background:rgba(255,255,255,.22)}
-  .step-line.active{background:linear-gradient(90deg,var(--gold),var(--mint))}
-  .step-dot.active{background:linear-gradient(90deg,var(--gold),var(--mint));box-shadow:0 0 12px #30e0b0aa}
-  .step-dot.dim{background:rgba(255,255,255,.28)}
-
-  /* Badge */
-  .vip-badge{background:linear-gradient(90deg,var(--gold),var(--mint));color:#0a1e4d;font-weight:900;border-radius:9999px;padding:.25rem .75rem;display:inline-flex;gap:.4rem;align-items:center}
+  html,body{margin:0;padding:0;height:100%;font-family:'Cairo',sans-serif;background:#0a1e4d;color:#facc15}
+  .glass{backdrop-filter:blur(30px) saturate(180%);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+  .btn{background:linear-gradient(90deg,#facc15,#30e0b0);color:#0a1e4d;padding:.75rem 1.2rem;border-radius:14px;font-weight:900;box-shadow:0 0 24px #facc15aa}
 </style>
 </head>
 <body>
-<div id="vanta-bg" aria-hidden="true"></div>
-
-<main class="max-w-4xl mx-auto px-4 py-8">
-  <!-- Hero -->
-  <section class="text-center mb-8">
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-white/90 tiny mb-3">
-      <i class="fa-solid fa-circle-check text-[.8rem]"></i> تم الاستلام بنجاح
-    </div>
-    <h1 class="text-4xl md:text-5xl font-extrabold glow-text mb-2">شكراً لتقديمك 🙌</h1>
-    <p class="muted">تم تسجيل طلبك في نظامنا. يمكنك حفظ بطاقة المتابعة ومراجعة حالة الطلب في أي وقت.</p>
+<main class="p-6 max-w-3xl mx-auto">
+  <section class="glass p-8 my-8 text-center">
+    <h1 class="text-3xl md:text-4xl font-extrabold mb-2">شكراً لتقديمك 🙌</h1>
+    <p class="text-white/90">تم تسجيل طلبك في نظامنا. يمكنك حفظ بطاقة المتابعة ومراجعة حالة الطلب في أي وقت.</p>
   </section>
 
-  <!-- Client Card -->
-  <section id="card" class="glass p-[2px] rounded-2xl mb-6">
-    <div class="rounded-2xl p-6">
-      <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
-        <div class="vip-badge"><i class="fa-solid fa-id-card-clip"></i>&nbsp; Client Card</div>
-        <div class="text-white/80 tiny" id="cc-updated">—</div>
+  <section id="card" class="glass p-6 rounded-2xl">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-3">
+      <div class="bg-[#facc15] text-[#0a1e4d] font-bold rounded-full px-3 py-1">🪪 Client Card</div>
+      <div id="cc-updated" class="text-white/80 text-sm">—</div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-5">
+      <div>
+        <div id="cc-name" class="text-2xl font-extrabold text-white">—</div>
+        <div id="cc-case" class="text-white/80 mt-1">🆔 —</div>
+        <div id="cc-status" class="text-white/80 mt-1">📊 Submitted</div>
       </div>
-
-      <!-- Skeleton -->
-      <div id="cc-skel" class="grid sm:grid-cols-2 gap-5">
-        <div>
-          <div class="h-7 w-52 rounded skeleton mb-2"></div>
-          <div class="h-5 w-48 rounded skeleton mb-2"></div>
-          <div class="h-5 w-40 rounded skeleton"></div>
-        </div>
-        <div>
-          <div class="h-5 w-60 rounded skeleton mb-2"></div>
-          <div class="h-5 w-44 rounded skeleton"></div>
-        </div>
+      <div class="text-white/90">
+        <div id="cc-contact">📧 — | 📱 —</div>
+        <div id="cc-location" class="mt-1">📍 —</div>
       </div>
-
-      <!-- Real -->
-      <div id="cc-real" class="grid sm:grid-cols-2 gap-5 hidden">
-        <div>
-          <div class="text-2xl font-extrabold text-white" id="cc-name">—</div>
-          <div class="text-white/85 mt-1" id="cc-case">🆔 —</div>
-          <div class="text-white/85 mt-1" id="cc-status">📊 —</div>
-          <div class="text-white/85 mt-1" id="cc-position">🎯 —</div>
-        </div>
-        <div class="text-white/90">
-          <div id="cc-contact">📧 — | 📱 —</div>
-          <div class="mt-1" id="cc-location">📍 —</div>
-        </div>
-      </div>
-
-      <div class="flex flex-col sm:flex-row gap-3 mt-5">
-        <button id="cc-share" class="btn flex-1"><i class="fa-brands fa-whatsapp"></i>&nbsp; مشاركة عبر واتساب</button>
-        <a id="cc-edit" class="btn flex-1 text-center" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square"></i>&nbsp; تعديل الطلب</a>
-        <button id="cc-copy" class="btn flex-1"><i class="fa-solid fa-link"></i>&nbsp; نسخ رابط البطاقة</button>
-      </div>
+    </div>
+    <div class="flex gap-3 mt-4">
+      <a id="cc-edit" class="btn flex-1 text-center" target="_blank" rel="noopener">✏️ تعديل الطلب</a>
+      <button id="cc-copy" class="btn flex-1">🔗 نسخ رابط البطاقة</button>
     </div>
   </section>
 
-  <!-- Timeline -->
-  <section class="glass rounded-2xl p-6 mb-6">
-    <h2 class="text-2xl font-bold mb-2 glow-text">حالة الطلب</h2>
-    <p class="tiny mb-4">يتم تحديث الحالة تلقائياً عند معالجة طلبك.</p>
-
-    <div id="steps" class="flex items-center gap-2 mb-3">
-      <!-- dots + lines rendered by JS -->
-    </div>
-    <div id="step-labels" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 tiny text-white/85">
-      <!-- labels rendered by JS -->
-    </div>
-  </section>
-
-  <!-- Next steps & actions -->
-  <section class="glass rounded-2xl p-6">
-    <h3 class="text-xl font-bold glow-text mb-2">ما الخطوة التالية؟</h3>
-    <ul class="list-disc pr-5 tiny text-white/85 space-y-1">
+  <section class="glass p-6 rounded-2xl mt-4">
+    <h3 class="font-bold mb-2">ما الخطوة التالية؟</h3>
+    <ul class="text-white/90 list-disc pr-6 space-y-1">
       <li>احتفظ برقم القضية لديك — ستحتاجه عند الاستفسار.</li>
       <li>راجع بريدك الإلكتروني ورسائل هاتفك لأي تحديثات أو طلب مستندات.</li>
       <li>يمكنك العودة إلى هذه الصفحة لمتابعة الحالة في أي وقت.</li>
     </ul>
-    <div class="mt-4 flex flex-wrap gap-3">
-      <button id="btn-print" class="btn"><i class="fa-solid fa-print"></i>&nbsp; طباعة إيصال</button>
-      <a id="btn-track" class="btn" href="#card"><i class="fa-solid fa-magnifying-glass"></i>&nbsp; عرض البطاقة</a>
-    </div>
   </section>
-
-  <p class="text-center tiny mt-6">الواجهة محمية بتقنيات التشفير. © مكتب الهجرة</p>
 </main>
 
 <script>
-/* ===== CONFIG (update if you redeploy) ===== */
-const webAppUrl = "https://script.google.com/macros/s/AKfycbxoaFHoTFzFAu1ecB48AE3s4Q66H7u1GMztSwU-ztgGF7rimoBp0G8zzwQevIZMOlM5/exec";
+const webAppUrl = 'https://script.google.com/macros/s/AKfycbwV5_K8M5HZtOCsL2LnY2LVzgYbWsJcvgRdiI82bxc2-9NGYGd-yYKXTtvuou66_5Lv/exec';
 
-/* ===== INIT BG ===== */
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.VANTA && window.THREE){
-    VANTA.NET({ el:"#vanta-bg", mouseControls:true, touchControls:true,
-      color:0xfacc15, backgroundColor:0x0a1e4d, points:18, maxDistance:20, spacing:16 });
-  }
-  boot();
-});
+function p(k){ return new URLSearchParams(location.search).get(k) || ''; }
 
-/* ===== Helpers ===== */
-const $ = sel => document.querySelector(sel);
-const esc = s => String(s==null? "": s);
+function render(d){
+  const caseNo = d.caseNumber || d.caseId || p('uniqueId') || '—';
+  const fullName = d.fullName || p('fullName4') || '—';
+  const email = d.email || p('email5') || '—';
+  const phone = d.phone || p('input45') || '—';
+  const city = (d.address && d.address.city) || p('city') || '—';
+  const st = d.applicationStatus || p('applicationStatus') || 'Submitted';
+  const updated = (d.meta && d.meta.lastUpdateDate) || new Date().toLocaleString();
 
-/* Map status text → step index */
-const STATUS_STEPS = [
-  {key:'submitted',          ar:'تم الإرسال'},
-  {key:'under_review',       ar:'قيد المراجعة'},
-  {key:'phone_interview',    ar:'مقابلة هاتفية'},
-  {key:'documents_pending',  ar:'مستندات مطلوبة'},
-  {key:'candidate_approved', ar:'تمت الموافقة'},
-  {key:'hired_placed',       ar:'تم التوظيف'}
-];
-const NEGATIVE_KEYS = ['rejected','not eligible','غير مؤهل','مرفوض','رفض','declined'];
+  document.getElementById('cc-name').textContent = fullName;
+  document.getElementById('cc-case').textContent = '🆔 ' + caseNo;
+  document.getElementById('cc-status').textContent = '📊 ' + st;
+  document.getElementById('cc-contact').textContent = `📧 ${email} | 📱 ${phone}`;
+  document.getElementById('cc-location').textContent = `📍 ${city}`;
+  document.getElementById('cc-updated').textContent = updated;
 
-function normalizeStatus(s){
-  const t = (s||'').toString().toLowerCase();
-  if(!t) return {idx:0,key:'submitted'};
-  if(NEGATIVE_KEYS.some(k => t.includes(k))) return {idx:1,key:'under_review', negative:true};
+  const submissionID = (d.meta && d.meta.submissionID) || p('submissionID') || '';
+  const editUrl = (d.meta && d.meta.editUrl) || p('edit_link') || (submissionID ? `https://www.jotform.com/edit/${submissionID}` : '#');
+  document.getElementById('cc-edit').href = editUrl;
 
-  if(t.includes('hire') || t.includes('placed') || t.includes('تم التوظيف')) return {idx:5,key:'hired_placed'};
-  if(t.includes('approved') || t.includes('مواف') || t.includes('قبول')) return {idx:4,key:'candidate_approved'};
-  if(t.includes('doc') || t.includes('مستند') || t.includes('وثائق') || t.includes('pending')) return {idx:3,key:'documents_pending'};
-  if(t.includes('interview') || t.includes('مقابلة') || t.includes('هاتف')) return {idx:2,key:'phone_interview'};
-  if(t.includes('review') || t.includes('قيد') || t.includes('جاري')) return {idx:1,key:'under_review'};
-  if(t.includes('submit') || t.includes('استلام') || t.includes('إرسال')) return {idx:0,key:'submitted'};
-
-  // default
-  return {idx:1,key:'under_review'};
-}
-
-function renderTimeline(statusText){
-  const wrap = $('#steps'); const labels = $('#step-labels');
-  wrap.innerHTML = ''; labels.innerHTML = '';
-
-  const info = normalizeStatus(statusText);
-  const activeIdx = info.idx;
-
-  for(let i=0;i<STATUS_STEPS.length;i++){
-    const dot = document.createElement('span');
-    dot.className = 'step-dot ' + (i<=activeIdx ? 'active' : 'dim');
-    wrap.appendChild(dot);
-    if(i < STATUS_STEPS.length - 1){
-      const line = document.createElement('div');
-      line.className = 'step-line ' + (i<activeIdx ? 'active' : '');
-      wrap.appendChild(line);
-    }
-
-    const lab = document.createElement('div');
-    lab.textContent = STATUS_STEPS[i].ar;
-    labels.appendChild(lab);
-  }
-
-  // Celebrate when approved or hired
-  if (activeIdx >= 4 && window.confetti){
-    // small burst
-    setTimeout(()=>{ window.confetti({ particleCount: 120, spread: 70, origin: { y: 0.25 } }); }, 250);
-  }
-}
-
-function formatCase(c){
-  if(!c) return '';
-  const m = String(c).match(/(\d{1,})$/);
-  if(m){ return 'Career-' + (('000000'+m[1]).slice(-6)); }
-  const up = String(c).toUpperCase();
-  return up.startsWith('CAREER-') ? up : ('Career-' + up.replace(/\D/g,''));
-}
-
-function showSkeleton(on){
-  $('#cc-skel').classList.toggle('hidden', !on);
-  $('#cc-real').classList.toggle('hidden', on);
-}
-
-function fillCard(d){
-  showSkeleton(false);
-
-  const fullName = d.fullName || [d.firstName, d.lastName].filter(Boolean).join(' ');
-  const caseId   = d.caseNumber || d.caseId || '';
-  const status   = d.applicationStatus || d.status || 'Submitted';
-  const workType = d.position || d.workType || '';
-  const city     = (d.address && d.address.city) || d.city || '';
-  const email    = d.email || '';
-  const phone    = d.phone || '';
-  const editUrl  = (d.meta && d.meta.editUrl) || '#';
-  const updated  = (d.meta && d.meta.lastUpdateDate) || d.updatedAt || new Date().toLocaleString();
-  const submissionID = (d.meta && (d.meta.submissionID)) || d.submissionID || d.submissionId || '';
-
-  $('#cc-name').textContent    = esc(fullName || '—');
-  $('#cc-case').textContent    = '🆔 ' + esc(formatCase(caseId) || '—');
-  $('#cc-status').textContent  = '📊 ' + esc(status || '—');
-  $('#cc-position').textContent= '🎯 ' + esc(workType || '—');
-  $('#cc-contact').textContent = `📧 ${esc(email||'—')}  |  📱 ${esc(phone||'—')}`;
-  $('#cc-location').textContent= `📍 ${esc(city||'—')}`;
-  $('#cc-updated').textContent = esc(updated);
-
-  const shareText = [
-    'ALHIJRAH – Client Card',
-    `الاسم: ${fullName||'—'}`,
-    `القضية: ${formatCase(caseId)||'—'}`,
-    `الحالة: ${status||'—'}`,
-    workType? `الوظيفة: ${workType}` : '',
-    city? `المدينة: ${city}` : '',
-    email? `البريد: ${email}` : '',
-    phone? `الجوال: ${phone}` : '',
-    submissionID? `Submission: ${submissionID}`: ''
-  ].filter(Boolean).join('\n');
-
-  $('#cc-edit').href = editUrl || '#';
-  $('#cc-share').onclick = () => window.open('https://wa.me/13139194292?text='+encodeURIComponent(shareText), '_blank');
-
-  $('#cc-copy').onclick = ()=>{
-    const url = `${location.origin}${location.pathname}?${caseId?('case='+encodeURIComponent(formatCase(caseId))+'&'):''}${submissionID?('submissionID='+encodeURIComponent(submissionID)+'&'):''}#card`;
-    navigator.clipboard.writeText(url).then(()=>alert('تم نسخ رابط البطاقة')).catch(()=>alert('تعذّر نسخ الرابط'));
+  document.getElementById('cc-copy').onclick = ()=>{
+    const url = `${location.origin}${location.pathname}?submissionID=${encodeURIComponent(submissionID)}&uniqueId=${encodeURIComponent(caseNo)}#card`;
+    navigator.clipboard.writeText(url);
+    alert('تم نسخ رابط البطاقة');
   };
-
-  renderTimeline(status);
 }
 
-function instantFromUrl(){
-  const p = new URLSearchParams(location.search);
-  const obj = {
-    caseNumber: p.get('uniqueId') || p.get('case') || '',
-    fullName: (p.get('fullName4') || '').trim(),
-    phone: (p.get('input45') || '').trim(),
-    email: (p.get('email5') || '').trim(),
-    address: { city: (p.get('city') || '').trim() },
-    applicationStatus: (p.get('applicationStatus') || p.get('status') || 'Submitted').trim(),
-    meta: {
-      editUrl: p.get('edit_link') || '',
-      lastUpdateDate: new Date().toLocaleString(),
-      submissionID: p.get('submissionID') || p.get('sid') || ''
-    }
-  };
-  return obj;
-}
+(async function init(){
+  // Instant render from URL tokens
+  render({});
 
-async function enrichFromApi(seed){
-  const sid = seed?.meta?.submissionID || '';
-  const caseId = seed?.caseNumber || seed?.caseId || '';
-  try{
-    // Prefer Submission ID
-    if(sid){
-      const r = await fetch(`${webAppUrl}?action=track&by=submission&key=${encodeURIComponent(sid)}`, {headers:{Accept:'application/json'}, cache:'no-store'});
-      if(r.ok){
+  // Enrich from backend using submissionID if present
+  const sid = p('submissionID');
+  if (sid) {
+    try{
+      const url = `${webAppUrl}?action=track&by=submission&key=${encodeURIComponent(sid)}`;
+      const r = await fetch(url, {cache:'no-store'});
+      if (r.ok){
         const d = await r.json();
-        if(d && !d.error && Object.keys(d).length) return d;
+        if (d && Object.keys(d).length) render(d);
       }
-    }
-    // Fallback to Case Number
-    if(caseId){
-      const r2 = await fetch(`${webAppUrl}?action=track&by=case&key=${encodeURIComponent(caseId)}`, {headers:{Accept:'application/json'}, cache:'no-store'});
-      if(r2.ok){
-        const d2 = await r2.json();
-        if(d2 && !d2.error && Object.keys(d2).length) return d2;
-      }
-    }
-  }catch(_){}
-  return null;
-}
-
-function boot(){
-  // show skeleton and instant card first
-  showSkeleton(true);
-  const instant = instantFromUrl();
-  // if we at least have something, reveal real area with instant data
-  fillCard(instant);
-
-  // Try to enrich from backend (Sheet + Jotform)
-  enrichFromApi(instant).then(d=>{
-    if(d && !d.error) fillCard(d);
-  });
-
-  // Print
-  document.getElementById('btn-print').onclick = ()=>window.print();
-}
+    }catch(_){}
+  }
+})();
 </script>
 </body>
 </html>
