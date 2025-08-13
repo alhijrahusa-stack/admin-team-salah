@@ -77,6 +77,10 @@
   /* Controls row wrap on small */
   .controls-wrap{display:grid;grid-template-columns:1fr;gap:.5rem}
   @media (min-width: 900px){ .controls-wrap{grid-template-columns:1fr auto auto auto auto}}
+
+  /* Toast */
+  #toast{position:fixed;bottom:20px;right:20px;z-index:11000;display:none}
+  .toast-msg{background:rgba(10,30,77,.95);color:#facc15;border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:.7rem 1rem;box-shadow:0 10px 24px rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
@@ -173,6 +177,7 @@
       </div>
       <div class="flex gap-3 mt-3">
         <button id="btnTrack" class="btn-vip flex-1"><i class="fa-solid fa-magnifying-glass"></i>&nbsp; ابحث</button>
+        <button id="btnTrackReset" class="btn-vip flex-1" type="button">إعادة ضبط</button>
       </div>
       <div id="trackResult" class="mt-4 bg-white/10 rounded-xl p-4 text-white/95 min-h-[88px]" aria-live="polite">سيظهر هنا الملخص.</div>
     </div>
@@ -225,10 +230,14 @@
   </div>
 </div>
 
+<!-- Toast container -->
+<div id="toast"><div class="toast-msg" id="toastMsg">تم</div></div>
+
 <script>
 /* ===== CONFIG ===== */
-const webAppUrl = "https://script.google.com/macros/s/AKfycbx0j3SNg7KO-tLt3nyI6T4tLaLhoGWgj0zO-OVQyopqGZrNXeKD5tdRCW8aKRR4ubteqw/exec"; // LIVE /exec
-const AMAZON_GEOJSON_URL = "";   // optional: host full list at GitHub (GeoJSON/JSON)
+/* ✅ تم التبديل إلى عنوان الويب-آب الجديد الذي أرسلتَه */
+const webAppUrl = "https://script.google.com/macros/s/AKfycbxnSvSJUQUmIBuZz6YiXxA0-6ThGnZ-RVm1NwMZL8oOcpAb9QeKkH4KDysyMXeYZ_nmXA/exec";
+const AMAZON_GEOJSON_URL = "";   // optional: رابط قائمة مواقع أمازون على GitHub (GeoJSON/JSON)
 const DATA_VERSION = "v1.3";     // bump to refresh local cache
 
 /* ===== INIT ===== */
@@ -253,10 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Tracking
   document.getElementById("btnTrack").addEventListener("click", trackSearch);
   document.getElementById("trackKey").addEventListener("keydown", e=>{ if(e.key==="Enter") trackSearch(); });
+  document.getElementById("btnTrackReset").addEventListener("click", resetTrack);
 
   // Jotform → Client Card
-  listenJotformSubmission();   // secondary path
-  prefillCardFromURL();        // primary, instant path after redirect
+  listenJotformSubmission();   // secondary path (postMessage)
+  prefillCardFromURL();        // primary path after redirect (URL params)
 
   // Lazy-init map when visible
   const mapEl = document.getElementById('wh-map');
@@ -276,6 +286,15 @@ function startExperience(){
   setTimeout(()=>{ gate.style.display="none"; const m=document.getElementById("main"); m.style.display="block"; m.style.opacity=0; setTimeout(()=>{m.style.transition="opacity .9s"; m.style.opacity=1;},10); },1200);
 }
 
+/* ===== Toast ===== */
+function showToast(msg){
+  const t = document.getElementById('toast'), tm = document.getElementById('toastMsg');
+  tm.textContent = msg || 'تم';
+  t.style.display = 'block'; t.style.opacity = 0;
+  t.style.transition = 'opacity .25s'; requestAnimationFrame(()=>{ t.style.opacity = 1; });
+  setTimeout(()=>{ t.style.opacity = 0; setTimeout(()=>{ t.style.display='none'; },250); }, 2000);
+}
+
 /* ===== Utils ===== */
 const normDigits = s=>String(s||"").replace(/[٠-٩]/g,d=>String.fromCharCode(d.charCodeAt(0)-1632)).replace(/[۰-۹]/g,d=>String.fromCharCode(d.charCodeAt(0)-1776));
 const isEmail = s=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
@@ -291,15 +310,22 @@ async function trackSearch(){
   if(!key){ res.textContent="⚠ يرجى إدخال قيمة."; return; }
   if(bySel==="email" && !isEmail(key)){ res.textContent="⚠ بريد غير صحيح."; return; }
   if(bySel==="phone"){ key=key.replace(/[^\d+]/g,""); if(!isPhone(key)){ res.textContent="⚠ رقم غير صحيح."; return; } }
+
   res.textContent="⏳ جارِ البحث...";
   try{
     const r=await fetch(`${webAppUrl}?by=${encodeURIComponent(bySel)}&key=${encodeURIComponent(key)}`,{headers:{Accept:"application/json"},cache:"no-store"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     const d=await r.json();
     if(d.error){ res.textContent="❌ "+d.error; return; }
+    if(Object.keys(d||{}).length===0){ res.textContent="ℹ️ لا توجد بيانات مطابقة."; return; }
     res.innerHTML = renderSummary(d);
     localStorage.setItem("alh_last_search", JSON.stringify({by:bySel,key,d,t:Date.now()}));
   }catch(err){ res.textContent="⚠ خطأ: "+(err.message||""); }
+}
+function resetTrack(){
+  document.getElementById("trackBy").value="email";
+  document.getElementById("trackKey").value="";
+  document.getElementById("trackResult").textContent="سيظهر هنا الملخص.";
 }
 function renderSummary(d){
   const caseNo=d.caseNumber||d.caseId||"—";
@@ -355,7 +381,7 @@ function prefillCardFromURL(){
   };
   fillCard(instant);
 
-  // Enrich via Apps Script (latest merged data)
+  // Enrich via Apps Script (latest merged data) — باستخدام الويب-آب الجديد
   if (submissionID) {
     fetch(`${webAppUrl}?by=submission&key=${encodeURIComponent(submissionID)}`, {headers:{Accept:"application/json"},cache:"no-store"})
       .then(r => r.ok ? r.json() : null)
@@ -363,7 +389,6 @@ function prefillCardFromURL(){
       .catch(()=>{/* keep instant */});
   }
 
-  // Scroll if anchored
   if (location.hash === "#card") {
     const box = document.getElementById("clientCard");
     if (box) box.scrollIntoView({behavior:"smooth", block:"center"});
@@ -418,8 +443,11 @@ function fillCard(d, err){
   }
 
   const fullName=d?.fullName||((d?.firstName||"")+" "+(d?.lastName||"")).trim()||"—";
+  const caseId  = d?.caseNumber||d?.caseId||"";
+  const submissionID = d?.submissionID || d?.submissionId || d?.meta?.submissionID || "";
+
   document.getElementById("cc-name").textContent = fullName;
-  document.getElementById("cc-case").textContent = "🆔 " + (d?.caseNumber||d?.caseId||"—");
+  document.getElementById("cc-case").textContent = "🆔 " + (caseId||"—");
   document.getElementById("cc-status").textContent = "📊 " + (d?.applicationStatus||d?.status||"—");
   document.getElementById("cc-position").textContent = "🎯 " + (d?.position||d?.workType||"—");
   document.getElementById("cc-contact").textContent = `📧 ${d?.email||"—"}  |  📱 ${d?.phone||"—"}`;
@@ -431,17 +459,18 @@ function fillCard(d, err){
     const text=[
       "ALHIJRAH – Client Card",
       `الاسم: ${fullName}`,
-      `القضية: ${d?.caseNumber||d?.caseId||"—"}`,
+      `القضية: ${caseId||"—"}`,
       `الحالة: ${d?.applicationStatus||d?.status||"—"}`,
       `الوظيفة: ${d?.position||d?.workType||"—"}`,
       `المدينة: ${d?.address?.city||d?.city||"—"}`,
-      `البريد: ${d?.email||"—"} | الجوال: ${d?.phone||"—"}`
-    ].join("\n");
+      `البريد: ${d?.email||"—"} | الجوال: ${d?.phone||"—"}`,
+      submissionID? `Submission: ${submissionID}`:""
+    ].filter(Boolean).join("\n");
     window.open("https://wa.me/13139194292?text="+encodeURIComponent(text), "_blank");
   };
   document.getElementById("cc-copy").onclick = ()=>{
-    const url = location.origin+location.pathname+"#card";
-    navigator.clipboard.writeText(url).then(()=>alert("تم نسخ رابط البطاقة"));
+    const url = `${location.origin}${location.pathname}?${caseId?("case="+encodeURIComponent(caseId)+"&"):""}${submissionID?("submissionID="+encodeURIComponent(submissionID)+"&"):""}#card`;
+    navigator.clipboard.writeText(url).then(()=>showToast("تم نسخ رابط البطاقة")).catch(()=>showToast("تعذر نسخ الرابط"));
   };
 
   try{ localStorage.setItem("alh_last_card", JSON.stringify({d,t:Date.now()})); }catch(_){}
@@ -546,7 +575,7 @@ function resetAmazon(){
   clearUserCircle();
 }
 function locateMe(){
-  if(!navigator.geolocation){ alert("المتصفح لا يدعم تحديد الموقع."); return; }
+  if(!navigator.geolocation){ showToast("المتصفح لا يدعم تحديد الموقع."); return; }
   navigator.geolocation.getCurrentPosition(pos=>{
     const {latitude:lat, longitude:lon}=pos.coords; currentUser = [lat,lon];
     setUserCircle(lat,lon, milesToMeters(getRadiusMiles()));
@@ -556,7 +585,7 @@ function locateMe(){
       .sort((a,b)=>a.km-b.km)
       .slice(0,6).map(x=>({...x.p, km:x.km}));
     renderNearestList(nearest);
-  }, _=>alert("تعذر تحديد الموقع."), {enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+  }, _=>showToast("تعذر تحديد الموقع."), {enableHighAccuracy:true,timeout:10000,maximumAge:60000});
 }
 function renderNearestList(list){
   const box=document.getElementById("nearestList");
