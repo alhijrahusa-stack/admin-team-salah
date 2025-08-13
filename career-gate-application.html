@@ -81,6 +81,9 @@
   /* Toast */
   #toast{position:fixed;bottom:20px;right:20px;z-index:11000;display:none}
   .toast-msg{background:rgba(10,30,77,.95);color:#facc15;border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:.7rem 1rem;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+
+  /* Thank You banner */
+  #thanks{display:none}
 </style>
 </head>
 <body>
@@ -103,8 +106,14 @@
 
 <!-- Main -->
 <main id="main" class="p-6 max-w-screen-xl mx-auto hidden">
+  <!-- Thank You -->
+  <section id="thanks" class="glass p-5 my-6 rounded-xl text-center">
+    <div class="text-2xl font-extrabold glow-text mb-1">🎉 تم استلام طلبك بنجاح</div>
+    <div class="text-white/90">شكرًا لك <span id="ty-name">ضيفنا الكريم</span>. تم إنشاء بطاقتك الذكية أدناه — يمكنك حفظ الرابط ومشاركته.</div>
+  </section>
+
   <!-- Hero -->
-  <section class="glass p-8 my-10 rounded-xl text-center">
+  <section class="glass p-8 my-6 rounded-xl text-center">
     <h2 class="text-4xl font-extrabold mb-2 glow-text">بوابة خدمات الهجرة الرقمية</h2>
     <p class="text-lg mb-2 text-white/90">ذكية • حديثة • تجربة VIP</p>
   </section>
@@ -235,10 +244,9 @@
 
 <script>
 /* ===== CONFIG ===== */
-/* ✅ تم التبديل إلى عنوان الويب-آب الجديد الذي أرسلتَه */
-const webAppUrl = "https://script.google.com/macros/s/AKfycbxnSvSJUQUmIBuZz6YiXxA0-6ThGnZ-RVm1NwMZL8oOcpAb9QeKkH4KDysyMXeYZ_nmXA/exec";
-const AMAZON_GEOJSON_URL = "";   // optional: رابط قائمة مواقع أمازون على GitHub (GeoJSON/JSON)
-const DATA_VERSION = "v1.3";     // bump to refresh local cache
+const webAppUrl = "https://script.google.com/macros/s/AKfycbxoaFHoTFzFAu1ecB48AE3s4Q66H7u1GMztSwU-ztgGF7rimoBp0G8zzwQevIZMOlM5/exec";
+const AMAZON_GEOJSON_URL = "";   // اختياري: ملف GeoJSON على GitHub
+const DATA_VERSION = "v1.3";
 
 /* ===== INIT ===== */
 document.addEventListener('DOMContentLoaded', () => {
@@ -265,10 +273,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("btnTrackReset").addEventListener("click", resetTrack);
 
   // Jotform → Client Card
-  listenJotformSubmission();   // secondary path (postMessage)
-  prefillCardFromURL();        // primary path after redirect (URL params)
+  listenJotformSubmission();
+  prefillCardFromURL();
 
-  // Lazy-init map when visible
+  // Lazy-init map
   const mapEl = document.getElementById('wh-map');
   const obs = new IntersectionObserver((entries)=>{
     if(entries.some(e=>e.isIntersecting)){ initAmazonMap(); obs.disconnect(); }
@@ -296,11 +304,18 @@ function showToast(msg){
 }
 
 /* ===== Utils ===== */
-const normDigits = s=>String(s||"").replace(/[٠-٩]/g,d=>String.fromCharCode(d.charCodeAt(0)-1632)).replace(/[۰-۹]/g,d=>String.fromCharCode(d.charCodeAt(0)-1776));
+const normDigits = s=>String(s||"")
+  .replace(/[٠-٩]/g,d=>String.fromCharCode(d.charCodeAt(0)-1632))
+  .replace(/[۰-۹]/g,d=>String.fromCharCode(d.charCodeAt(0)-1776));
 const isEmail = s=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
 const isPhone = s=>/^\+?\d{7,15}$/.test(s);
-const hav = (lat1,lon1,lat2,lon2)=>{ const R=6371,to=deg=>deg*Math.PI/180; const dLat=to(lat2-lat1),dLon=to(lon2-lon1);
-  const a=Math.sin(dLat/2)**2 + Math.cos(to(lat1))*Math.cos(to(lat2))*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(a)); };
+const toRad = deg=>deg*Math.PI/180;
+const hav = (lat1,lon1,lat2,lon2)=>{
+  const R=6371; // km
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(a));
+};
 
 /* ===== Track Search ===== */
 async function trackSearch(){
@@ -313,13 +328,18 @@ async function trackSearch(){
 
   res.textContent="⏳ جارِ البحث...";
   try{
-    const r=await fetch(`${webAppUrl}?by=${encodeURIComponent(bySel)}&key=${encodeURIComponent(key)}`,{headers:{Accept:"application/json"},cache:"no-store"});
+    const url = `${webAppUrl}?action=track&by=${encodeURIComponent(bySel)}&key=${encodeURIComponent(key)}`;
+    const r=await fetch(url,{headers:{Accept:"application/json"},cache:"no-store"});
     if(!r.ok) throw new Error("HTTP "+r.status);
     const d=await r.json();
     if(d.error){ res.textContent="❌ "+d.error; return; }
     if(Object.keys(d||{}).length===0){ res.textContent="ℹ️ لا توجد بيانات مطابقة."; return; }
     res.innerHTML = renderSummary(d);
     localStorage.setItem("alh_last_search", JSON.stringify({by:bySel,key,d,t:Date.now()}));
+
+    // Show card & thanks
+    showCardSkeleton(); fillCard(d);
+    showThanks(d);
   }catch(err){ res.textContent="⚠ خطأ: "+(err.message||""); }
 }
 function resetTrack(){
@@ -327,6 +347,8 @@ function resetTrack(){
   document.getElementById("trackKey").value="";
   document.getElementById("trackResult").textContent="سيظهر هنا الملخص.";
 }
+
+/* ===== Summary Renderer ===== */
 function renderSummary(d){
   const caseNo=d.caseNumber||d.caseId||"—";
   const fullName=d.fullName||((d.firstName||"")+" "+(d.lastName||"")).trim()||"—";
@@ -354,8 +376,6 @@ function restoreLastSearch(){
 }
 
 /* ===== Client Card (Primary: URL tokens; Secondary: postMessage) ===== */
-
-/* PRIMARY: show card from URL tokens after Thank-You redirect. */
 function prefillCardFromURL(){
   const p = new URLSearchParams(location.search);
 
@@ -367,35 +387,33 @@ function prefillCardFromURL(){
   const city         = (p.get("city")      || "").trim();
   const status       = (p.get("applicationStatus") || p.get("status") || "Submitted").trim();
   const editLink     = p.get("edit_link") || "";
+  const forceTY      = p.get("thankyou");
 
-  if(!submissionID && !fullName && !phone && !email && !uniqueId) return;
+  if(!submissionID && !fullName && !phone && !email && !uniqueId && !forceTY) return;
 
   showCardSkeleton();
 
-  // Instant card from URL
   const instant = {
     caseId: uniqueId || "", caseNumber: uniqueId || "",
     fullName, phone, email, applicationStatus: status,
     address: { city },
-    meta: { editUrl: editLink, lastUpdateDate: new Date().toLocaleString() }
+    meta: { editUrl: editLink, lastUpdateDate: new Date().toLocaleString(), submissionID }
   };
   fillCard(instant);
+  showThanks(instant);
 
-  // Enrich via Apps Script (latest merged data) — باستخدام الويب-آب الجديد
   if (submissionID) {
-    fetch(`${webAppUrl}?by=submission&key=${encodeURIComponent(submissionID)}`, {headers:{Accept:"application/json"},cache:"no-store"})
+    fetch(`${webAppUrl}?action=track&by=submission&key=${encodeURIComponent(submissionID)}`, {headers:{Accept:"application/json"},cache:"no-store"})
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if(d && !d.error) fillCard(d); })
+      .then(d => { if(d && !d.error){ fillCard(d); showThanks(d); } })
       .catch(()=>{/* keep instant */});
   }
-
   if (location.hash === "#card") {
     const box = document.getElementById("clientCard");
     if (box) box.scrollIntoView({behavior:"smooth", block:"center"});
   }
 }
 
-/* SECONDARY: still listen for postMessage from the embedded Jotform. */
 function listenJotformSubmission(){
   const jf = document.getElementById('jf');
   if (!jf) return;
@@ -413,8 +431,8 @@ function listenJotformSubmission(){
       const sid = payload?.submissionID || payload?.submissionId || payload?.data?.submissionID;
       showCardSkeleton();
       if(sid){
-        fetch(`${webAppUrl}?by=submission&key=${encodeURIComponent(sid)}`, {headers:{Accept:"application/json"},cache:"no-store"})
-          .then(r=>r.json()).then(d=>fillCard(d)).catch(()=>fillCard(null,"تعذر جلب البيانات"));
+        fetch(`${webAppUrl}?action=track&by=submission&key=${encodeURIComponent(sid)}`, {headers:{Accept:"application/json"},cache:"no-store"})
+          .then(r=>r.json()).then(d=>{ fillCard(d); showThanks(d); }).catch(()=>fillCard(null,"تعذر جلب البيانات"));
       } else {
         fillCard(null,"لم يصل رقم الإرسال من Jotform.");
       }
@@ -478,7 +496,19 @@ function fillCard(d, err){
   box.scrollIntoView({behavior:"smooth", block:"center"});
 }
 
-/* ===== Amazon Map (Smarter / Future look) ===== */
+/* Thank You banner logic */
+function showThanks(d){
+  const ty = document.getElementById('thanks');
+  if(!ty) return;
+  const hasSubmission = d?.submissionID || d?.submissionId || d?.meta?.submissionID;
+  const urlTY = new URLSearchParams(location.search).get("thankyou");
+  if(hasSubmission || urlTY){
+    document.getElementById('ty-name').textContent = (d?.fullName||d?.firstName||"ضيفنا الكريم");
+    ty.style.display = 'block';
+  }
+}
+
+/* ===== Amazon Map ===== */
 let whMap, cluster, heatLayer, userCircle=null, allWH=[], idxToMarker=[], statesSet=new Set();
 let currentUser = null;
 
@@ -497,7 +527,6 @@ function initAmazonMap(){
   whMap.addLayer(cluster);
 
   heatLayer = L.heatLayer([], {radius: 25, blur: 18, maxZoom: 10});
-  overlayLayers["Heatmap"] = heatLayer;
   ctl.addOverlay(heatLayer, "Heatmap");
 
   loadWH();
@@ -639,42 +668,15 @@ function setUserCircle(lat,lon, r){
 function clearUserCircle(){ if(userCircle){ try{ whMap.removeLayer(userCircle);}catch(_){ } userCircle=null; } }
 function toggleHeatmap(on){
   if(on){ if(!whMap.hasLayer(heatLayer)) heatLayer.addTo(whMap); }
-  else { if(whMap.hasLayer(heatLayer)) whMap.removeLayer(heatLayer); }
+  else { if(whMap.hasLayer(heatLayer)) heatLayer.removeFrom(whMap); }
 }
 
-/* Default sample warehouses (tip: replace with your full list via AMAZON_GEOJSON_URL) */
-function defaultWH(){
-  return [
-    {code:"JFK8", city:"Staten Island", state:"NY", lat:40.640, lon:-74.190, address:"Amazon Staten Island"},
-    {code:"EWR4", city:"Robbinsville", state:"NJ", lat:40.214, lon:-74.618, address:"Robbinsville FC"},
-    {code:"DTW1", city:"Romulus", state:"MI", lat:42.223, lon:-83.369, address:"Romulus"},
-    {code:"DET2", city:"Shelby Twp", state:"MI", lat:42.670, lon:-83.030, address:"Shelby Township"},
-    {code:"MDW2", city:"Joliet", state:"IL", lat:41.520, lon:-88.120, address:"Joliet"},
-    {code:"IND1", city:"Whitestown", state:"IN", lat:39.933, lon:-86.345, address:"Whitestown"},
-    {code:"CVG1", city:"Hebron", state:"KY", lat:39.055, lon:-84.661, address:"Hebron (CVG)"},
-    {code:"ATL6", city:"East Point", state:"GA", lat:33.660, lon:-84.440, address:"Atlanta Area"},
-    {code:"MCO1", city:"Orlando", state:"FL", lat:28.430, lon:-81.310, address:"Orlando"},
-    {code:"TPA1", city:"Ruskin", state:"FL", lat:27.718, lon:-82.433, address:"Ruskin"},
-    {code:"DFW7", city:"Dallas/Fort Worth", state:"TX", lat:32.900, lon:-97.040, address:"DFW Area"},
-    {code:"HOU3", city:"Houston", state:"TX", lat:29.770, lon:-95.340, address:"Houston"},
-    {code:"PHX3", city:"Phoenix", state:"AZ", lat:33.440, lon:-112.210, address:"West Phoenix"},
-    {code:"LAS7", city:"North Las Vegas", state:"NV", lat:36.240, lon:-115.120, address:"North LV"},
-    {code:"ONT2", city:"San Bernardino", state:"CA", lat:34.085, lon:-117.273, address:"San Bernardino"},
-    {code:"LGB8", city:"Rialto", state:"CA", lat:34.110, lon:-117.383, address:"Rialto"},
-    {code:"OAK4", city:"Tracy", state:"CA", lat:37.740, lon:-121.420, address:"Tracy"},
-    {code:"SJC7", city:"Tracy", state:"CA", lat:37.740, lon:-121.420, address:"Tracy 2"},
-    {code:"SMF6", city:"Sacramento", state:"CA", lat:38.650, lon:-121.500, address:"Sacramento"},
-    {code:"PDX9", city:"Troutdale", state:"OR", lat:45.543, lon:-122.390, address:"Troutdale"},
-    {code:"BFI5", city:"Kent", state:"WA", lat:47.385, lon:-122.230, address:"Kent"},
-    {code:"GEG1", city:"Spokane", state:"WA", lat:47.620, lon:-117.530, address:"Spokane"}
-  ];
-}
-
-/* ===== Tiny bot mock ===== */
+/* ===== Tiny bot mock (safe) ===== */
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));}
 function sendMsg(){
   const m=document.getElementById('msgIn').value.trim(); if(!m) return;
   const box=document.getElementById('msgs');
-  box.insertAdjacentHTML('beforeend', `<div class="bg-[#30e0b0] text-[#0a1e4d] rounded-xl px-3 py-2 ml-auto max-w-[75%]">${m}</div>`);
+  box.insertAdjacentHTML('beforeend', `<div class="bg-[#30e0b0] text-[#0a1e4d] rounded-xl px-3 py-2 ml-auto max-w-[75%]">${esc(m)}</div>`);
   document.getElementById('msgIn').value="";
   setTimeout(()=>box.insertAdjacentHTML('beforeend', `<div class="bg-[#facc15] text-[#0a1e4d] rounded-xl px-3 py-2 max-w-[75%]">شكرًا! سنعاود التواصل.</div>`), 700);
 }
