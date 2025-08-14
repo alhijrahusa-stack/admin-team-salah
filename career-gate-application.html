@@ -6,6 +6,8 @@
 <title>ROYAL CORE PORTAL | مكتب الهجرة</title>
 
 <!-- Fonts + Tailwind -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -95,10 +97,10 @@
 
 <!-- Social -->
 <div class="fixed top-1/2 -translate-y-1/2 right-4 z-[10001] flex flex-col gap-3">
-  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://www.instagram.com/alhijrahservices/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://tiktok.com/@alhijrahusa" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://www.facebook.com/share/1A5jeLiNyz/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://whatsapp.com/channel/0029Vb4RbVhBvvsa7100Ls2E" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://www.instagram.com/alhijrahservices/" target="_blank" aria-label="Instagram" rel="noopener"><i class="fab fa-instagram"></i></a>
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://tiktok.com/@alhijrahusa" target="_blank" aria-label="TikTok" rel="noopener"><i class="fab fa-tiktok"></i></a>
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://www.facebook.com/share/1A5jeLiNyz/" target="_blank" aria-label="Facebook" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+  <a class="glass w-12 h-12 flex items-center justify-center rounded-full text-xl hover:scale-110 transition" href="https://whatsapp.com/channel/0029Vb4RbVhBvvsa7100Ls2E" target="_blank" aria-label="WhatsApp" rel="noopener"><i class="fab fa-whatsapp"></i></a>
 </div>
 
 <!-- Main -->
@@ -113,7 +115,7 @@
   <section class="my-10">
     <h3 class="text-3xl font-bold mb-6 glow-text text-center">📝 قدّم طلبك الآن</h3>
     <div class="glass p-4 rounded-xl max-w-3xl mx-auto">
-      <iframe id="jf" title="ALHIJRAH Career Gate" src="https://form.jotform.com/AlhijrahServices/CareerGate" style="width:100%;height:900px;border:0;border-radius:14px" loading="lazy"></iframe>
+      <iframe id="jf" title="ALHIJRAH Career Gate" src="https://form.jotform.com/AlhijrahServices/CareerGate" style="width:100%;height:900px;border:0;border-radius:14px" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write *"></iframe>
       <p class="text-center text-white/80 mt-3 text-sm">عند الإرسال، ستظهر بطاقتك الذكية في الأسفل تلقائيًا.</p>
     </div>
 
@@ -220,12 +222,12 @@
 </main>
 
 <!-- Assistant -->
-<button id="botToggle" class="btn-vip fixed bottom-6 left-6 w-14 h-14 rounded-full flex items-center justify-center text-xl">🤖</button>
+<button id="botToggle" class="btn-vip fixed bottom-6 left-6 w-14 h-14 rounded-full flex items-center justify-center text-xl" aria-label="فتح المساعد">🤖</button>
 <div id="bot" class="glass hidden fixed bottom-24 left-6 w-[320px] max-h-[420px] rounded-2xl p-4 overflow-y-auto">
   <div class="text-slate-900 font-bold rounded-md text-center py-1 mb-2" style="background:linear-gradient(90deg,#facc15,#30e0b0)">مساعد الهجرة الرقمي</div>
   <div id="msgs" class="space-y-2 max-h-[260px] overflow-y-auto"></div>
   <div class="flex gap-2 mt-2">
-    <input id="msgIn" class="flex-1 rounded-lg p-2 text-slate-900" placeholder="اكتب سؤالك..."/>
+    <input id="msgIn" class="flex-1 rounded-lg p-2 text-slate-900" placeholder="اكتب سؤالك..." aria-label="رسالتك"/>
     <button class="btn-vip" onclick="sendMsg()">إرسال</button>
   </div>
 </div>
@@ -235,7 +237,7 @@
 
 <script>
 /* ===== CONFIG ===== */
-const webAppUrl = "https://script.google.com/macros/s/AKfycbzccuERWzL_ldWf9P40_dRurMkNrojrYdjmLdLnHzbZPpHZMDKRI7TbcyomwylWUfRZ/exec";
+const webAppUrl = "https://script.google.com/macros/s/AKfycbyAVIbwCXoS6BcKd-aEbtWzzpkrQEsxV_C0cKGi1-eud9lTQRmmiKV2YoY-OeALAnFO/exec";
 const AMAZON_GEOJSON_URL = ""; // optional: external full list for warehouses
 const DATA_VERSION = "v1.3";
 
