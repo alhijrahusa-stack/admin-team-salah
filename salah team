@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>👑 Royal AI — Professional Case Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root { --royal:#0a112d; --gold:#d4af37; --glass:rgba(255,255,255,.07);} 
+    body { background: radial-gradient(1200px 600px at 20% -10%, rgba(212,175,55,.14), transparent 60%), linear-gradient(145deg, #0b132e 0%, #000 100%); color:#fff; font-family:"Tajawal", system-ui, sans-serif; min-height:100vh; padding:1rem; }
+    .glass { background: var(--glass); border:1px solid rgba(255,255,255,.18); backdrop-filter: blur(12px); border-radius:16px; box-shadow:0 0 25px rgba(212,175,55,.25); }
+    .btn { background: var(--gold); color:#000; font-weight:700; padding:.65rem 1rem; border-radius:12px; transition:.2s; }
+    .btn:disabled { opacity:.6; cursor:not-allowed; }
+    .btn:hover { filter: brightness(1.12); box-shadow:0 0 10px var(--gold); }
+    .input, select, textarea { width:100%; padding:.6rem .75rem; border-radius:10px; border:1px solid rgba(255,255,255,.35); color:#111; background:#fff; }
+    .input:focus, select:focus, textarea:focus { box-shadow:0 0 0 3px rgba(212,175,55,.35); border-color:var(--gold); }
+    .tab-btn[aria-selected="true"] { background: rgba(212,175,55,.22); border:1px solid var(--gold); }
+    .status-chip { padding:.25rem .6rem; border-radius:999px; font-size:.75rem; font-weight:800; display:inline-block }
+    .s-Approved{background:#C6EFCE;color:#124B14}
+    .s-In\ Review{background:#FFF2CC;color:#5B4000}
+    .s-Open{background:#E7F3FF;color:#0B3B7A}
+    .s-On\ Hold{background:#FDE9D9;color:#7A2E0B}
+    .s-Rejected{background:#F8CECC;color:#7A0B0B}
+    .toast{position:fixed;inset-inline:0;top:10px;width:min(520px,92%);margin:auto;z-index:1000}
+  </style>
+</head>
+<body>
+
+<header class="glass p-4 mb-4">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-extrabold font-[Orbitron]">👑 Royal AI — Professional Case Management</h1>
+      <p class="text-sm opacity-80">Live Dashboard • Secure • Fast • Accurate</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="health" class="text-sm opacity-85" aria-live="polite" aria-atomic="true"></span>
+    </div>
+  </div>
+</header>
+
+<nav class="glass p-2 mb-6 grid grid-cols-3 md:grid-cols-7 gap-2" role="tablist" aria-label="Main Navigation">
+  <button class="tab-btn btn" role="tab" aria-controls="tab-form" aria-selected="true" type="button">📄 نموذج</button>
+  <button class="tab-btn btn" role="tab" aria-controls="tab-search" aria-selected="false" type="button">🔎 بحث</button>
+  <button class="tab-btn btn" role="tab" aria-controls="tab-admin" aria-selected="false" type="button">🛠 تحديث</button>
+  <button class="tab-btn btn" role="tab" aria-controls="tab-kpi" aria-selected="false" type="button">📊 مؤشرات</button>
+  <button class="tab-btn btn" role="tab" aria-controls="tab-audit" aria-selected="false" type="button">🧾 سجل</button>
+  <button class="tab-btn btn" role="tab" aria-controls="tab-sheets" aria-selected="false" type="button">📂 الشيتات</button>
+  <button class="tab-btn btn" role="tab" aria-controls="tab-auth" aria-selected="false" type="button">🔐 الإدارة</button>
+</nav>
+
+<div id="toast" class="toast hidden glass text-center p-3 font-bold" role="status" aria-live="polite"></div>
+
+<main class="grid gap-6">
+  <!-- FORM -->
+  <section id="tab-form" class="glass p-4" role="tabpanel">
+    <h2 class="text-lg font-bold mb-3">📄 إضافة حالة جديدة</h2>
+    <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" novalidate>
+      <input type="hidden" id="idemKey" name="Idempotency Key" />
+      <div><label class="block mb-1">الاسم الكامل</label><input name="Full Name" class="input" required></div>
+      <div><label class="block mb-1">البريد الإلكتروني</label><input name="Email" type="email" class="input" required></div>
+      <div><label class="block mb-1">الهاتف</label><input name="Phone" class="input" required></div>
+      <div><label class="block mb-1">القسم</label><select name="Department" id="deptSel" class="input"></select></div>
+      <div><label class="block mb-1">الحالة</label><select name="Status" id="statusSel" class="input"></select></div>
+      <div><label class="block mb-1">الدفع</label><select name="Payment Status" id="paySel" class="input"></select></div>
+      <div><label class="block mb-1">اسم الموظف</label><select name="Staff Name" id="staffSel" class="input"></select></div>
+      <div class="md:col-span-2"><label class="block mb-1">ملاحظات</label><textarea name="Notes" class="input" rows="3"></textarea></div>
+      <div class="md:col-span-2"><label class="block mb-1">📎 مرفق (PDF/JPG/PNG)</label><input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png"></div>
+      <div class="md:col-span-2 flex justify-end"><button type="submit" class="btn w-full md:w-auto">📩 إرسال الحالة</button></div>
+    </form>
+  </section>
+
+  <!-- SEARCH -->
+  <section id="tab-search" class="glass p-4 hidden" role="tabpanel">
+    <h2 class="text-lg font-bold mb-3">🔎 بحث عن حالة</h2>
+    <div class="flex gap-2">
+      <input id="q" class="input flex-1" placeholder="رقم الحالة أو البريد أو الهاتف">
+      <button id="btnSearch" class="btn" type="button">بحث</button>
+    </div>
+    <div id="searchResults" class="mt-4 grid gap-2"></div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="tab-admin" class="glass p-4 hidden" role="tabpanel">
+    <h2 class="text-lg font-bold mb-3">🛠 تحديث حالة</h2>
+    <div class="flex gap-2 mb-3">
+      <input id="adminCaseNumber" class="input flex-1" placeholder="رقم الحالة">
+      <button id="btnLoadCase" class="btn" type="button">تحميل</button>
+    </div>
+    <div id="adminFields" class="hidden grid gap-3">
+      <select id="adminStatus" class="input"></select>
+      <select id="adminPayment" class="input"></select>
+      <textarea id="adminNotes" class="input" rows="3" placeholder="ملاحظات"></textarea>
+      <input type="file" id="adminFile" accept=".pdf,.jpg,.jpeg,.png">
+      <button id="btnAdminUpdate" class="btn" type="button">💾 تحديث</button>
+    </div>
+  </section>
+
+  <!-- KPI -->
+  <section id="tab-kpi" class="glass p-4 hidden" role="tabpanel">
+    <h2 class="text-lg font-bold mb-3">📊 المؤشرات</h2>
+    <div id="kpiWrap" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4"></div>
+    <canvas id="chart" height="200" aria-label="KPI Chart"></canvas>
+  </section>
+
+  <!-- AUDIT -->
+  <section id="tab-audit" class="glass p-4 hidden" role="tabpanel">
+    <h2 class="text-lg font-bold mb-3">🧾 سجل التدقيق</h2>
+    <button id="btnLoadAudit" class="btn mb-2" type="button">تحميل السجل</button>
+    <div id="auditWrap" class="overflow-auto max-h-96 text-sm"></div>
+  </section>
+
+  <!-- SHEETS -->
+  <section id="tab-sheets" class="glass p-4 hidden" role="tabpanel">
+    <h2 class="text-lg font-bold mb-3">📂 إدارة الشيتات</h2>
+    <button id="btnLoadSheets" class="btn mb-2" type="button">📥 تحميل الشيتات</button>
+    <div id="sheetsWrap" class="overflow-auto max-h-96 text-sm"></div>
+  </section>
+
+  <!-- AUTH -->
+  <section id="tab-auth" class="glass p-4 hidden" role="tabpanel">
+    <h2 class="text-lg font-bold mb-3">🔐 صلاحيات الإدارة</h2>
+    <input id="adminTokenInput" class="input mb-2" type="password" placeholder="أدخل رمز الإدارة">
+    <button id="btnSaveToken" class="btn" type="button">💾 حفظ الرمز</button>
+    <div class="opacity-70 text-sm mt-2">الرمز يُستخدم للتحديث والرفع فقط</div>
+  </section>
+</main>
+
+<script>
+/* ===== Config ===== */
+const API_URL = "https://script.google.com/macros/s/AKfycbzS82y_ABu9D-yjo9JYMjmMnZ3avdki1uC8QDZp41VsjQYMTEIXW56f3kzhGLsukSs8rw/exec";
+let ADMIN_TOKEN = null;
+
+/* ===== Tiny helpers ===== */
+function $(sel,root=document){return root.querySelector(sel)}
+function $$(sel,root=document){return Array.from(root.querySelectorAll(sel))}
+function toast(msg,ok=true){
+  const t=$('#toast');
+  t.textContent=msg; t.classList.remove('hidden');
+  t.style.color=ok?'#00ff99':'#ff5c5c';
+  setTimeout(()=>t.classList.add('hidden'),3500);
+}
+async function callAPI(action,body={}){
+  const r=await fetch(API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({action, ...body})
+  });
+  const j=await r.json().catch(()=>({ok:false,message:'Bad JSON'}));
+  if(!j.ok) throw new Error(j.message||'خطأ');
+  return j;
+}
+function toBase64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});}
+
+/* ===== Tabs ===== */
+$$('.tab-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    $$('.tab-btn').forEach(x=>x.setAttribute('aria-selected','false'));
+    b.setAttribute('aria-selected','true');
+    $$('main > section').forEach(s=>s.classList.add('hidden'));
+    const pane = $('#'+b.getAttribute('aria-controls'));
+    if (pane) pane.classList.remove('hidden');
+  });
+});
+
+/* ===== Boot: health + lists ===== */
+(async()=>{
+  try{
+    const r=await callAPI('apiHealth_');
+    $('#health').textContent=`✅ Health OK v${r.ver||''}`;
+  }catch{
+    $('#health').textContent='❌ Offline';
+  }
+
+  // Load dropdown lists (staff, departments, statuses, payments)
+  try{
+    const lists = await callAPI('apiLists_');
+    const staffSel = $('#staffSel');
+    const deptSel  = $('#deptSel');
+    const statusSel= $('#statusSel');
+    const paySel   = $('#paySel');
+
+    [staffSel, deptSel, statusSel, paySel].forEach(el=>{ if (el) el.innerHTML=''; });
+
+    (lists.departments||['General','Immigration','Legal','Finance']).forEach(v=>{
+      const o=document.createElement('option'); o.textContent=v; deptSel?.appendChild(o);
+    });
+    (lists.statuses||['Open','In Review','Approved','On Hold','Rejected']).forEach(v=>{
+      const o=document.createElement('option'); o.textContent=v; statusSel?.appendChild(o);
+    });
+    (lists.payments||['Unpaid','Pending','Partial','Paid']).forEach(v=>{
+      const o=document.createElement('option'); o.textContent=v; paySel?.appendChild(o);
+    });
+    (lists.staff||[]).forEach(v=>{
+      const o=document.createElement('option'); o.textContent=v; staffSel?.appendChild(o);
+    });
+  }catch(e){
+    console.warn('lists failed', e);
+  }
+})();
+
+/* ===== Admin Token ===== */
+$('#btnSaveToken').addEventListener('click',()=>{
+  ADMIN_TOKEN=$('#adminTokenInput').value.trim()||null;
+  toast('✅ تم حفظ رمز الإدارة');
+});
+
+/* ===== Create Case ===== */
+$('#caseForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  try{
+    const f=e.target;
+    const fd=new FormData(f);
+    const data={}; fd.forEach((v,k)=>data[k]=v);
+    const idem=crypto.randomUUID();
+    $('#idemKey').value=idem;
+
+    const res=await callAPI('apiSave_', { idempotencyKey: idem, data });
+    const cn=res.caseNumber;
+
+    const file=$('#fileInput').files[0];
+    if(file){
+      const b64=await toBase64(file);
+      await callAPI('apiUpload_', { adminToken: ADMIN_TOKEN, caseNumber: cn, filename:file.name, mimeType:file.type, file:b64 });
+    }
+    toast(`✅ تم إرسال الحالة: ${cn}`);
+    f.reset();
+  }catch(err){
+    toast(err.message,false);
+  }
+});
+
+/* ===== Search ===== */
+$('#btnSearch').addEventListener('click',async()=>{
+  try{
+    const q=$('#q').value.trim();
+    const r=await callAPI('apiSearch_', { q });
+    const box=$('#searchResults'); box.innerHTML='';
+    if(!r.records.length){ box.innerHTML='<div>❌ لا توجد نتائج</div>'; return; }
+    r.records.forEach(rec=>{
+      box.innerHTML += `
+      <div class="glass p-2 rounded">
+        <div class="flex justify-between">
+          <div>${rec['Case Number']||''}</div>
+          <span class="status-chip s-${(rec['Status']||'').replace(/\s/g,'\\ ')}">${rec['Status']||''}</span>
+        </div>
+        <div>${rec['Full Name']||''} • ${rec['Phone']||''}</div>
+        ${rec['Attachment URL']?`<a target="_blank" href="${rec['Attachment URL']}">📎 عرض المرفق</a>`:''}
+      </div>`;
+    });
+  }catch(e){ toast(e.message,false); }
+});
+
+/* ===== Admin Load/Update ===== */
+$('#btnLoadCase').addEventListener('click',async()=>{
+  const cn=$('#adminCaseNumber').value.trim();
+  if(!cn) return;
+  try{
+    const r=await callAPI('apiReview_', { caseNumber: cn });
+    $('#adminFields').classList.remove('hidden');
+
+    const stSel=$('#adminStatus'); const paySel=$('#adminPayment');
+    stSel.innerHTML=''; paySel.innerHTML='';
+    ['Open','In Review','Approved','On Hold','Rejected'].forEach(s=>{
+      const o=document.createElement('option'); o.textContent=s; stSel.appendChild(o);
+    });
+    ['Unpaid','Pending','Partial','Paid'].forEach(s=>{
+      const o=document.createElement('option'); o.textContent=s; paySel.appendChild(o);
+    });
+
+    stSel.value=r.record['Status'] || 'Open';
+    paySel.value=r.record['Payment Status'] || 'Unpaid';
+    $('#adminNotes').value=r.record['Notes']||'';
+  }catch(e){ toast(e.message,false); }
+});
+
+$('#btnAdminUpdate').addEventListener('click',async()=>{
+  try{
+    const cn=$('#adminCaseNumber').value.trim();
+    const updates={ Status: $('#adminStatus').value, 'Payment Status': $('#adminPayment').value, Notes: $('#adminNotes').value };
+    await callAPI('apiUpdate_', { adminToken: ADMIN_TOKEN, caseNumber: cn, updates });
+
+    const file=$('#adminFile').files[0];
+    if(file){
+      const b64=await toBase64(file);
+      await callAPI('apiUpload_', { adminToken: ADMIN_TOKEN, caseNumber: cn, filename:file.name, mimeType:file.type, file:b64 });
+    }
+    toast('✅ تم التحديث بنجاح');
+  }catch(e){ toast(e.message,false); }
+});
+
+/* ===== KPIs ===== */
+async function loadKPI(){
+  try{
+    const r=await callAPI('apiInsights_');
+    const m=r.metrics||{};
+    const wrap=$('#kpiWrap'); wrap.innerHTML='';
+    const labels=Object.keys(m); const data=Object.values(m);
+
+    labels.forEach((k,i)=>{
+      wrap.innerHTML += `
+        <div class="glass p-2 text-center">
+          <div class="text-sm opacity-70">${k}</div>
+          <div class="text-2xl font-bold">${data[i]}</div>
+        </div>`;
+    });
+
+    const ctx=$('#chart').getContext('2d');
+    if(window.__chart) window.__chart.destroy();
+    window.__chart=new Chart(ctx,{
+      type:'bar',
+      data:{ labels, datasets:[{ data, backgroundColor:'gold' }]},
+      options:{ plugins:{ legend:{display:false}}, scales:{ y:{ beginAtZero:true } } }
+    });
+  }catch(e){ toast(e.message,false); }
+}
+loadKPI();
+
+/* ===== Audit ===== */
+$('#btnLoadAudit').addEventListener('click',async()=>{
+  try{
+    const r=await fetch(`${API_URL}?action=fetchAudit`);
+    const res=await r.json();
+    const wrap=$('#auditWrap'); wrap.innerHTML='';
+    if(!res.ok || !res.data || !res.data.length){ wrap.innerHTML='❌ لا يوجد سجل'; return; }
+
+    const table=document.createElement('table');
+    table.className='w-full text-left';
+    const thead=document.createElement('thead');
+    thead.innerHTML='<tr><th class="p-2">التاريخ</th><th class="p-2">نوع الحدث</th><th class="p-2">التفاصيل</th></tr>';
+    table.appendChild(thead);
+
+    const tbody=document.createElement('tbody');
+    res.data.slice(-200).reverse().forEach(it=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML = `
+        <td class="p-2">${it['Timestamp']||it['Time']||''}</td>
+        <td class="p-2">${it['Action']||it['Event']||''}</td>
+        <td class="p-2">${it['Details']||it['Detail']||''}</td>`;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+  }catch(e){ toast(e.message,false); }
+});
+
+/* ===== Sheets (optional if backend supports listSheets_) ===== */
+$('#btnLoadSheets').addEventListener('click', async ()=>{
+  try{
+    // If your backend has listSheets_, switch to POST callAPI('listSheets_', {})
+    const res = await fetch(API_URL+'?action=listSheets'); // this build returns message; adjust if needed
+    const data = await res.json();
+    const wrap = $('#sheetsWrap');
+    wrap.innerHTML = '';
+    wrap.textContent = data.message || 'Use the POST action listSheets_ in your backend to fetch sheets metadata.';
+  }catch(e){ toast(e.message,false); }
+});
+</script>
+</body>
+</html>
